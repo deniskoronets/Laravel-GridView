@@ -1,0 +1,18 @@
+{
+    "name": "woo/laravel-grid-view",
+    "description": "Yii2 gridview analog for laravel",
+    "require": {
+        "laravel/laravel": "^5.2"
+    },
+    "authors": [
+        {
+            "name": "Denis Koronets",
+            "email": "deniskoronets@woo.zp.ua"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Woo\\GridView": ""
+        }
+    },
+}
