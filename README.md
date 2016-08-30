@@ -4,9 +4,10 @@ This package is analog for yii's gridview component.
 Implemented for laravel, it provides a simple interface to print data in table view.
 
 install:
-` composer require woo/laravel-grid-view
+`composer require woo/laravel-grid-view`
 
 usage in your view:
+```
 {{ Woo\GridView\View::make([
     'dataProvider' => Users::all(),
     'columns' => [
@@ -28,3 +29,4 @@ usage in your view:
       }),
     ],
 ]) }}
+```
