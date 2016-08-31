@@ -68,13 +68,24 @@ class View
 	{
 		$result = [];
 
-		foreach ($this->dataSource->all() as $row) {
+		foreach ($this->dataSource->all() as $rowData) {
 			$row = [];
 			foreach ($this->params['columns'] as $id => $column) {
-				if (is_callable($column['value'])) {
-					$row[$id] = $column['value']();
+
+				if (is_string($column)) {
+
+					$row[$id] = $rowData->{$column};
+
+				} elseif (is_array($column)) {
+
+					if (is_callable($column['value'])) {
+						$row[$id] = $column['value']($rowData);
+					}
 				}
 			}
+
+			$result[] = $row;
+			$row = [];
 		}
 
 		return $array;
