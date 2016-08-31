@@ -99,7 +99,11 @@ class View
 	{
 		$items = [];
 		foreach ($this->params['columns'] as $id => $column) {
-			$items[$id] = $column['label'];
+			if (isset($column['label'])) {
+				$items[$id] = $column['label'];
+			} else {
+				$items[$id] = ucfirst($column);
+			}
 		}
 
 		return $items;
