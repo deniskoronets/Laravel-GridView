@@ -13,7 +13,9 @@ class GridViewServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		$this->loadViewsFrom(__DIR__.'/views', 'gridview');
+		$this->loadViewsFrom(__DIR__.'/../views', 'woo_gridview');
+
+		require_once __DIR__ . '/functions.php';
 	}
 
 	public function register()
