@@ -3,6 +3,7 @@
     "description": "Yii2 gridview analog for laravel",
     "version": "dev",
     "require": {
+        "php": "^7.0",
     },
     "authors": [
         {

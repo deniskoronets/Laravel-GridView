@@ -25,7 +25,7 @@ return view('users.index', [
 ```
 
 sample usage in a view file:
-```
+```blade
 {!! grid([
     'dataProvider' => $dataProvider,
     'rowsPerPage' => 20,
