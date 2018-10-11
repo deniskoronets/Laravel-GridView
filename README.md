@@ -64,17 +64,19 @@ sample usage in a view file:
 
 <p>A list if GridView object options:</p>
 
-| Property          | Description                                           |
-| dataProvider      | Should be an object, implement DataProviderInterface  |
-| columns           | A list of columns. In compiling, columns are          |
-| columnClass       | Default column-renderer class (if column's class is not specified) |
-| renderer          | Should be a class path. Could be used in order to override renderer |
-| rowsPerPage       | Amount of rows to be shown per page                   |
-| tableHtmlOptions  | Allows to set options for table element               |
+| Property          | Description                                                           |
+| ----------------- | --------------------------------------------------------------------- |
+| dataProvider      | Should be an object, implement DataProviderInterface                  |
+| columns           | A list of columns. In compiling, columns are                          |
+| columnClass       | Default column-renderer class (if column's class is not specified)    |
+| renderer          | Should be a class path. Could be used in order to override renderer   |
+| rowsPerPage       | Amount of rows to be shown per page                                   |
+| tableHtmlOptions  | Allows to set options for table element                               |
 
 <p>A list of Column options:</p>
 
 | Property              | Description                                           |
+| --------------------- | ----------------------------------------------------- |
 | class                 | Could be used in order to override type of column     |
 | title                 | Allows to set column title                            |
 | value                 | Depends on column class, could be string or Closure   |
