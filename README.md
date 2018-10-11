@@ -7,6 +7,8 @@
 This package is analog for yii's gridview component.
 Implemented for laravel, it provides a simple interface to print data in table view.
 
+https://packagist.org/packages/woo/laravel-grid-view
+
 ## Installation
 Simply run `composer require woo/laravel-grid-view`
 or add to your composer.json: `"woo/laravel-grid-view": "@dev"` and run composer update.
