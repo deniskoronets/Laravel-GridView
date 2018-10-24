@@ -9,11 +9,16 @@ class AttributeColumn extends BaseColumn
     public function __construct($config)
     {
         if (is_string($config)) {
-            $this->title = ucfirst(str_replace('_', ' ', $config));
-            $this->value = $config;
+            $config = [
+                'value' => $config,
+            ];
         }
 
-        parent::__construct([]);
+        parent::__construct($config);
+
+        if (empty($this->title)) {
+            $this->title = ucfirst(str_replace('_', ' ', $this->value));
+        }
     }
 
     /**
