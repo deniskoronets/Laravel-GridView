@@ -44,13 +44,13 @@ class ActionsColumn extends BaseColumn
     {
         return [
             'show' => function($model) {
-                return '<a href="' . call_user_func($this->actionsUrls, $model)['show'] . '">Show</a>';
+                return '<a href="' . call_user_func($this->actionsUrls, $model)['show'] . '">View</a>';
             },
             'edit' => function($model) {
                 return '<a href="' . call_user_func($this->actionsUrls, $model)['edit'] . '">Edit</a>';
             },
             'delete' => function($model) {
-                return '<a href="' . call_user_func($this->actionsUrls, $model)['delete'] . '">Remove</a>';
+                return '<a href="' . call_user_func($this->actionsUrls, $model)['delete'] . '">Delete</a>';
             },
         ];
     }
