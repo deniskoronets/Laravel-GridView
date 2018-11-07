@@ -18,13 +18,19 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($data as $row)
+        @forelse ($data as $row)
             <tr>
                 @foreach ($columns as $column)
                     <td {!! $column->contentHtmlOptions() !!}>{!! $column->renderValue($row) !!}</td>
                 @endforeach
             </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="{{ count($columns) }}" class="text-center">
+                    No data to display
+                </td>
+            </tr>
+        @endforelse
     </tbody>
     <caption>
         @php
