@@ -2,8 +2,6 @@
 
 [![Code Climate](https://codeclimate.com/github/deniskoronets/Laravel-GridView/badges/gpa.svg)](https://codeclimate.com/github/deniskoronets/Laravel-GridView) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/09b254fbd7ab42379daf9e428fbc4be5)](https://www.codacy.com/app/deniskoronets/Laravel-GridView?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=deniskoronets/Laravel-GridView&amp;utm_campaign=Badge_Grade) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/deniskoronets/Laravel-GridView/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/deniskoronets/Laravel-GridView/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/deniskoronets/Laravel-GridView/badges/build.png?b=master)](https://scrutinizer-ci.com/g/deniskoronets/Laravel-GridView/build-status/master)
 
-*Please notice that this package is BETA*
-
 This package is analog for yii's gridview component.
 Implemented for laravel, it provides a simple interface to print data in table view.
 
@@ -39,6 +37,11 @@ sample usage in a view file:
         [
             'class' => \Woo\GridView\Columns\RawColumn::class,
             'title' => 'Status',
+            'contentHtmlOptions' => [
+                'data-id' => function($model) {
+                    return $model->id;
+                }
+            ],
             'value' => function($model) {
                 
                 if ($model->status == 'rejected') {
@@ -70,20 +73,28 @@ sample usage in a view file:
 | ----------------- | --------------------------------------------------------------------- |
 | dataProvider      | Should be an object, implement DataProviderInterface                  |
 | columns           | A list of columns. In compiling, columns are                          |
-| columnClass       | Default column-renderer class (if column's class is not specified)    |
+| columnOptions     | A list of basic options for all collumns                              |
 | renderer          | Should be a class path. Could be used in order to override renderer   |
+| rendererOptions   | A list of options for renderer                                        |
 | rowsPerPage       | Amount of rows to be shown per page                                   |
 | tableHtmlOptions  | Allows to set options for table element                               |
 
 <p>A list of Column options:</p>
 
-| Property              | Description                                           |
-| --------------------- | ----------------------------------------------------- |
-| class                 | Could be used in order to override type of column     |
-| title                 | Allows to set column title                            |
-| value                 | Depends on column class, could be string or Closure   |
-| headerHtmlOptions     | A list of html options for `table thead th`           |
-| contentHtmlOptions    | A list of options for `table tbody td`                |
+| Property              | Description                                                             |
+| --------------------- | ----------------------------------------------------------------------- |
+| class                 | Could be used in order to override type of column (aliases allowed)     |
+| title                 | Allows to set column title                                              |
+| value                 | Depends on column class, could be string or Closure                     |
+| headerHtmlOptions     | A list of html options for `table thead th`                             |
+| contentHtmlOptions    | A list of options for `table tbody td`                                  |
+| contentFormat         | Post-processing for value. Could be: raw, text, url, email, image (url) |
+
+<p>A list of Renderer options:</p>
+
+| Property              | Description                                                             |
+| --------------------- | ----------------------------------------------------------------------- |
+| id                    | Id of container element                                                 |
 
 *Available columns classes:*
 - ActionsColumn
@@ -92,3 +103,19 @@ sample usage in a view file:
 
 *Available rendereds:*
 - DefaultRenderer
+
+*Available class aliases:*
+| Alias       | Context       | Real class                                                              |
+| ----------- | ------------- | ----------------------------------------------------------------------- |
+| attribute   | column        | Woo\GridView\Columns\AttributeColumn                                    |    
+| raw         | column        | Woo\GridView\Columns\RawColumn                                          |
+| actions     | column        | Woo\GridView\Columns\ActionsColumn                                      |
+| default     | renderer      | Woo\GridView\Renderers\DefaultRenderer                                  |      
+
+## Update log
+
+### v.2018.11.09
+- Added GridView $columnOptions to make able setting basic properties for all columns
+- Added GridView $rendererOptions, renderer options support (currently only wrapper element ID could be set)
+- Added dynamic htmlOption calculation, just set value to id
+- Added aliases support - instead of passing real class value, just pass alias

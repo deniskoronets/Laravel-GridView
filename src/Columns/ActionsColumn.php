@@ -29,17 +29,26 @@ class ActionsColumn extends BaseColumn
      */
     public $actionsUrls;
 
-    public function __construct(array $config)
-    {
-        parent::__construct($config);
+    /**
+     * @var string
+     */
+    public $contentFormat = 'raw';
 
-        GridViewHelper::testConfig($this, [
+    /**
+     * @return array
+     */
+    protected function configTests(): array
+    {
+        return array_merge(parent::configTests(), [
             'value' => 'string',
             'additionalActions' => 'array',
             'actionsUrls' => 'any',
         ]);
     }
 
+    /**
+     * @return array
+     */
     public function basicActions()
     {
         return [
@@ -55,7 +64,10 @@ class ActionsColumn extends BaseColumn
         ];
     }
 
-    public function renderValue($row)
+    /**
+     * @inheritdoc
+     */
+    public function _renderValue($row)
     {
         $result = $this->value;
 

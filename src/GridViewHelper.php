@@ -2,87 +2,48 @@
 
 namespace Woo\GridView;
 
-use Woo\GridView\Exceptions\GridViewConfigException;
+use Woo\GridView\Columns\ActionsColumn;
+use Woo\GridView\Columns\AttributeColumn;
+use Woo\GridView\Columns\RawColumn;
+use Woo\GridView\Renderers\DefaultRenderer;
 
 class GridViewHelper
 {
+    /**
+     * A list of grid aliases
+     * @var array
+     */
+    private static $aliases = [
+        'column' => [
+            'attribute' => AttributeColumn::class,
+            'raw' => RawColumn::class,
+            'actions' => ActionsColumn::class,
+        ],
+        'renderer' => [
+            'default' => DefaultRenderer::class,
+        ]
+    ];
+
     private function __construct() {}
 
     /**
-     * Allows to load config into object properties
-     * @param object $object
-     * @param array $config
-     * @throws GridViewConfigException
+     * Allows to resolve class name by its alias
+     * @param string $context
+     * @param string $alias
+     * @return mixed
      */
-    public static function loadConfig($object, array $config)
+    public static function resolveAlias(string $context, string $alias)
     {
-        foreach ($config as $key => $value) {
-
-            if (property_exists($object, $key)) {
-                $object->$key = $value;
-            }
-        }
-    }
-
-    /**
-     * Allows to test attributes and types in config
-     * @param $object
-     * @param array $tests
-     * @throws GridViewConfigException
-     */
-    public static function testConfig($object, array $tests)
-    {
-        foreach ($tests as $property => $test) {
-
-            if (!property_exists($object, $property)) {
-                throw new GridViewConfigException(
-                    'Unable to test ' . get_class($object) . ': property ' . $property . ' does not exist'
-                );
-            }
-
-            if (is_scalar($test)) {
-
-                $testPassed = true;
-
-                switch ($test) {
-                    case 'int':
-                        $testPassed = is_numeric($object->$property);
-                        break;
-
-                    case 'string':
-                        $testPassed = is_string($object->$property);
-                        break;
-
-                    case 'array':
-                        $testPassed = is_array($object->$property);
-                        break;
-
-                    case 'closure':
-                        $testPassed = $object->$property instanceof \Closure;
-                        break;
-
-                    case 'any':
-                        break;
-
-                    default:
-                        $testPassed = is_subclass_of($object->$property, $test);
-                }
-
-                if (!$testPassed) {
-                    throw new GridViewConfigException('
-                        Test ' . $test . ' has failed on ' . get_class($object) . '::' . $property
-                    );
-                }
-            }
-        }
+        return self::$aliases[$context][$alias] ?? $alias;
     }
 
     /**
      * Allows to convert options array to html string
      * @param array $htmlOptions
+     * @param array $context - context is variables, which are allowed to use when property value calculated dynamically
      * @return string
      */
-    public static function htmlOptionsToString(array $htmlOptions) : string
+    public static function htmlOptionsToString(array $htmlOptions, array $context = []) : string
     {
         if (empty($htmlOptions)) {
             return '';
@@ -91,6 +52,11 @@ class GridViewHelper
         $out = [];
 
         foreach ($htmlOptions as $k => $v) {
+
+            if ($v instanceof \Closure) {
+                $v = call_user_func_array($v, $context);
+            }
+
             $out[] = htmlentities($k) . '="' . htmlentities($v, ENT_COMPAT) . '"';
         }
 

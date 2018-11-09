@@ -2,19 +2,19 @@
 
 namespace Woo\GridView\Columns;
 
-use Woo\GridView\GridViewHelper;
-
 class RawColumn extends BaseColumn
 {
     /**
-     * RawColumn constructor.
-     * @param array $config
+     * @var string
      */
-    public function __construct(array $config)
-    {
-        parent::__construct($config);
+    public $contentFormat = 'raw';
 
-        GridViewHelper::testConfig($this, [
+    /**
+     * @return array
+     */
+    protected function configTests(): array
+    {
+        return array_merge(parent::configTests(), [
             'value' => 'closure',
         ]);
     }
@@ -22,7 +22,7 @@ class RawColumn extends BaseColumn
     /**
      * @inheritdoc
      */
-    public function renderValue($row)
+    public function _renderValue($row)
     {
         return call_user_func($this->value, $row);
     }

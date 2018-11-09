@@ -5,10 +5,12 @@ namespace Woo\GridView\Renderers;
 use Woo\GridView\GridView;
 use Woo\GridView\GridViewHelper;
 
-class DefaultRenderer implements RendererInterface
+class DefaultRenderer extends BaseRenderer
 {
     /**
-     * @inheritdoc
+     * @param GridView $view
+     * @return string
+     * @throws \Throwable
      */
     public function render(GridView $view): string
     {
@@ -21,6 +23,7 @@ class DefaultRenderer implements RendererInterface
             'dataProvider' => $view->dataProvider,
             'perPage' => $view->rowsPerPage,
             'currentPage' => $page,
+            'containerId' => $this->id,
         ])->render();
     }
 }

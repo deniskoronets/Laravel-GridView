@@ -6,10 +6,13 @@ use Woo\GridView\Columns\AttributeColumn;
 use Woo\GridView\Columns\BaseColumn;
 use Woo\GridView\DataProviders\DataProviderInterface;
 use Woo\GridView\Renderers\DefaultRenderer;
-use Woo\GridView\Renderers\RendererInterface;
+use Woo\GridView\Renderers\BaseRenderer;
+use Woo\GridView\Traits\Configurable;
 
 class GridView
 {
+    use Configurable;
+
     /**
      * @var DataProviderInterface
      */
@@ -21,14 +24,21 @@ class GridView
     public $columns = [];
 
     /**
-     * @var string
+     * @var array
      */
-    public $columnClass = AttributeColumn::class;
+    public $columnOptions = [
+        'class' => AttributeColumn::class,
+    ];
 
     /**
-     * @var string|RendererInterface
+     * @var string|BaseRenderer
      */
     public $renderer = DefaultRenderer::class;
+
+    /**
+     * @var array
+     */
+    public $rendererOptions = [];
 
     /**
      * @var int
@@ -45,21 +55,26 @@ class GridView
     /**
      * GridView constructor.
      * @param array $config
+     * @throws Exceptions\GridViewConfigException
      */
     public function __construct(array $config)
     {
-        GridViewHelper::loadConfig($this, $config);
+        $this->loadConfig($config);
+        $this->buildColumns();
+    }
 
-        GridViewHelper::testConfig($this, [
+    /**
+     * @return array
+     */
+    protected function configTests(): array
+    {
+        return [
             'dataProvider' => DataProviderInterface::class,
             'columns' => 'array',
-            'columnClass' => BaseColumn::class,
-            'renderer' => RendererInterface::class,
+            'renderer' => BaseRenderer::class,
             'rowsPerPage' => 'int',
             'tableHtmlOptions' => 'array',
-        ]);
-
-        $this->buildColumns();
+        ];
     }
 
     /**
@@ -67,14 +82,28 @@ class GridView
      */
     protected function buildColumns()
     {
-        foreach ($this->columns as &$column) {
+        foreach ($this->columns as &$columnOptions) {
 
-            if (is_object($column)) {
+            /**
+             * In case of when column is already build
+             */
+            if (is_object($columnOptions)) {
                 continue;
             }
 
-            $className = $column['class'] ?? $this->columnClass;
-            $column = new $className($column);
+            /**
+             * When only attribute name/value passed
+             */
+            if (is_string($columnOptions)) {
+                $columnOptions = [
+                    'value' => $columnOptions,
+                ];
+            }
+
+            $columnOptions = array_merge($this->columnOptions, $columnOptions);
+
+            $className = GridViewHelper::resolveAlias('column', $columnOptions['class']);
+            $columnOptions = new $className($columnOptions);
         }
     }
 
@@ -82,6 +111,7 @@ class GridView
      * Makes an instance
      * @param $params
      * @return GridView
+     * @throws Exceptions\GridViewConfigException
      */
     public static function make($params)
     {
@@ -95,7 +125,10 @@ class GridView
     public function render()
     {
         if (!is_object($this->renderer)) {
-            $this->renderer = new $this->renderer;
+
+            $className = GridViewHelper::resolveAlias('renderer', $this->renderer);
+
+            $this->renderer = new $className($this->rendererOptions);
         }
 
         return $this->renderer->render($this);

@@ -8,18 +8,12 @@ use Woo\GridView\Exceptions\GridViewConfigException;
 class AttributeColumn extends BaseColumn
 {
     /**
-     * @var string - allowed: url, email, text, image
+     * AttributeColumn constructor.
+     * @param $config
+     * @throws GridViewConfigException
      */
-    public $contentFormat = 'text';
-
     public function __construct($config)
     {
-        if (is_string($config)) {
-            $config = [
-                'value' => $config,
-            ];
-        }
-
         parent::__construct($config);
 
         if (empty($this->title)) {
@@ -28,38 +22,32 @@ class AttributeColumn extends BaseColumn
     }
 
     /**
+     * @return array
+     */
+    protected function configTests(): array
+    {
+        return array_merge(parent::configTests(), [
+            'value' => 'string',
+        ]);
+    }
+
+    /**
      * @inheritdoc
      * @throws ColumnRenderException
      * @throws GridViewConfigException
      */
-    public function renderValue($row)
+    public function _renderValue($row)
     {
-        $value = '';
-
         if (is_array($row)) {
 
-            if (isset($row[$this->value])) {
-                $value = $row[$this->value];
+            if (isset($row[$this->value]) && $row[$this->value] !== null) {
+                return $row[$this->value];
             }
-        } elseif (isset($row->{$this->value})) {
-            $value = $row->{$this->value};
+
+        } elseif (isset($row->{$this->value}) && $row->{$this->value} !== null) {
+            return $row->{$this->value};
         }
 
-        switch ($this->contentFormat) {
-            case 'text':
-                return htmlentities($value);
-
-            case 'url':
-                return '<a href="' . htmlspecialchars($value, ENT_QUOTES) . '">' . htmlentities($value) . '</a>';
-
-            case 'email':
-                return '<a href="mailto:' . htmlspecialchars($value, ENT_QUOTES) . '">' . htmlentities($value) . '</a>';
-                
-            case 'image':
-                return '<img src="' . htmlspecialchars($value, ENT_QUOTES) . '">';
-                
-            default:
-                throw new GridViewConfigException('Invalid content format for attribute collumn: ' . $this->value);
-        }
+        return $this->emptyValue;
     }
 }
