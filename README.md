@@ -105,6 +105,7 @@ sample usage in a view file:
 - DefaultRenderer
 
 *Available class aliases:*
+
 | Alias       | Context       | Real class                                                              |
 | ----------- | ------------- | ----------------------------------------------------------------------- |
 | attribute   | column        | Woo\GridView\Columns\AttributeColumn                                    |    
