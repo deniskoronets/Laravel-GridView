@@ -59,7 +59,15 @@ class ActionsColumn extends BaseColumn
                 return '<a href="' . call_user_func($this->actionsUrls, $model)['edit'] . '">Edit</a>';
             },
             'delete' => function($model) {
-                return '<a href="' . call_user_func($this->actionsUrls, $model)['delete'] . '">Delete</a>';
+                return '
+                    <form action="' . call_user_func($this->actionsUrls, $model)['delete'] . '" method="post" class="deleteForm">
+                        <input type="hidden" name="_token" value="' . csrf_token() . '">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="deleteButton" href="' . call_user_func($this->actionsUrls, $model)['delete'] . '"
+                            onclick="if(!confirm(\'Are you sure want to delete this item?\')) return false;"
+                        >Delete</button>
+                    </form>
+                ';
             },
         ];
     }
