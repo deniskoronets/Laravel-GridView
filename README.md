@@ -30,12 +30,12 @@ sample usage in a view file:
     'dataProvider' => $dataProvider,
     'rowsPerPage' => 20,
     'columns' => [
-        'id',        
+        'id',
         'email',
         'address',
-        'phone',        
+        'phone',
         [
-            'class' => \Woo\GridView\Columns\RawColumn::class,
+            'class' => 'raw',
             'title' => 'Status',
             'contentHtmlOptions' => [
                 'data-id' => function($model) {
@@ -43,16 +43,16 @@ sample usage in a view file:
                 }
             ],
             'value' => function($model) {
-                
+
                 if ($model->status == 'rejected') {
                     return '<b color="red">' . $model->status . '</b>';
                 }
-            
+
                 return '<b>' . $model->status . '</b>';
             }
         ],
         [
-            'class' => \Woo\GridView\Columns\ActionsColumn::class,
+            'class' => 'actions',
             'value' => '{show} {update}',
             'actionsUrls' => function($model) {
                 return [
@@ -99,7 +99,7 @@ sample usage in a view file:
 *Available columns classes:*
 - ActionsColumn
 - AttributeColumn
-- RawColumn 
+- RawColumn
 
 *Available rendereds:*
 - DefaultRenderer
@@ -108,14 +108,14 @@ sample usage in a view file:
 
 | Alias       | Context       | Real class                                                              |
 | ----------- | ------------- | ----------------------------------------------------------------------- |
-| attribute   | column        | Woo\GridView\Columns\AttributeColumn                                    |    
+| attribute   | column        | Woo\GridView\Columns\AttributeColumn                                    |
 | raw         | column        | Woo\GridView\Columns\RawColumn                                          |
 | actions     | column        | Woo\GridView\Columns\ActionsColumn                                      |
-| default     | renderer      | Woo\GridView\Renderers\DefaultRenderer                                  |      
+| default     | renderer      | Woo\GridView\Renderers\DefaultRenderer                                  |
 
 ## Update log
 
-### v.2018.11.09
+### dev -> v.1.0
 - Added GridView $columnOptions to make able setting basic properties for all columns
 - Added GridView $rendererOptions, renderer options support (currently only wrapper element ID could be set)
 - Added dynamic htmlOption calculation, just set value to id
