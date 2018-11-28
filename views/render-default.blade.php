@@ -33,24 +33,26 @@
                 </tr>
             @endforelse
         </tbody>
-        <caption>
-            @php
-            $totalPages = $dataProvider->getTotalPages($perPage)
-            @endphp
+        @if ($perPage != 0)
+            <caption>
+                @php
+                $totalPages = $dataProvider->getTotalPages($perPage)
+                @endphp
 
-            <ul class="pagination">
-                @if ($currentPage > 1)
-                    <li class="page-item"><a class="page-link" href="?page={{ $currentPage - 1 }}">Previous</a></li>
-                @endif
+                <ul class="pagination">
+                    @if ($currentPage > 1)
+                        <li class="page-item"><a class="page-link" href="?page={{ $currentPage - 1 }}">Previous</a></li>
+                    @endif
 
-                @for ($i = 1; $i <= $totalPages; $i++)
-                <li class="page-item @if($i == $currentPage) active @endif"><a class="page-link" href="?page={{ $i }}">{{ $i }}</a></li>
-                @endfor
+                    @for ($i = 1; $i <= $totalPages; $i++)
+                    <li class="page-item @if($i == $currentPage) active @endif"><a class="page-link" href="?page={{ $i }}">{{ $i }}</a></li>
+                    @endfor
 
-                @if ($currentPage < $totalPages)
-                    <li class="page-item"><a class="page-link" href="?page={{ $currentPage + 1 }}">Next</a></li>
-                @endif
-            </ul>
-        </caption>
+                    @if ($currentPage < $totalPages)
+                        <li class="page-item"><a class="page-link" href="?page={{ $currentPage + 1 }}">Next</a></li>
+                    @endif
+                </ul>
+            </caption>
+        @endif
     </table>
 </div>

@@ -76,7 +76,7 @@ sample usage in a view file:
 | columnOptions     | A list of basic options for all collumns                              |
 | renderer          | Should be a class path. Could be used in order to override renderer   |
 | rendererOptions   | A list of options for renderer                                        |
-| rowsPerPage       | Amount of rows to be shown per page                                   |
+| rowsPerPage       | Amount of rows to be shown per page (0 for table without pagination)  |
 | tableHtmlOptions  | Allows to set options for table element                               |
 
 <p>A list of Column options:</p>
@@ -114,6 +114,10 @@ sample usage in a view file:
 | default     | renderer      | Woo\GridView\Renderers\DefaultRenderer                                  |
 
 ## Update log
+
+
+### v.1.1
+- Added suppport for infinite tables (no per page limit)
 
 ### dev -> v.1.0
 - Added GridView $columnOptions to make able setting basic properties for all columns
