@@ -104,6 +104,10 @@ sample usage in a view file:
 *Available rendereds:*
 - DefaultRenderer
 
+*Available data providers:*
+- EloquentDataProvider
+- ArrayDataProvider
+
 *Available class aliases:*
 
 | Alias       | Context       | Real class                                                              |
@@ -115,6 +119,8 @@ sample usage in a view file:
 
 ## Update log
 
+### v1.2
+- Added ArrayDataProvider
 
 ### v.1.1
 - Added suppport for infinite tables (no per page limit)
