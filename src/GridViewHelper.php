@@ -19,12 +19,26 @@ class GridViewHelper
             'raw' => RawColumn::class,
             'actions' => ActionsColumn::class,
         ],
+        'formatters' => [
+
+        ],
         'renderer' => [
             'default' => DefaultRenderer::class,
         ]
     ];
 
     private function __construct() {}
+
+    /**
+     * Useful in case you want to register a new alias for your project
+     * @param string $context
+     * @param string $alias
+     * @param string $aliasTo
+     */
+    public static function registerAlias(string $context, string $alias, string $aliasTo)
+    {
+        self::$aliases[$context][$alias] = $aliasTo;
+    }
 
     /**
      * Allows to resolve class name by its alias
@@ -61,5 +75,35 @@ class GridViewHelper
         }
 
         return implode(' ', $out);
+    }
+
+    /**
+     * Allows to make column title by it key or attribute name
+     * @param string|int $key
+     * @return string
+     */
+    public static function columnTitle($key) : string
+    {
+        if (is_numeric($key)) {
+            return 'Column';
+        }
+
+        return ucwords(
+            trim(
+                preg_replace_callback(
+                    '/([A-Z]|_|.)/',
+                    function($word) {
+                        $word = $word[0];
+
+                        if ($word == '_' || $word == '.') {
+                            return ' ';
+                        }
+
+                        return ' ' . strtolower($word);
+                    },
+                    $key
+                )
+            )
+        );
     }
 }

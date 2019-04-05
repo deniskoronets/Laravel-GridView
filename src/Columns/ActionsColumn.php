@@ -16,23 +16,12 @@ class ActionsColumn extends BaseColumn
      * Value contains short codes for actions
      * @var string
      */
-    public $value = '{show} {edit} {delete}';
-
-    /**
-     * Additional actions could be added, key is short-code and value is callback
-     * @var array
-     */
-    public $additionalActions = [];
-
-    /**
-     * @var \Closure|null
-     */
-    public $actionsUrls;
+    public $value = [];
 
     /**
      * @var string
      */
-    public $contentFormat = 'raw';
+    public $formatters = 'raw';
 
     /**
      * @return array

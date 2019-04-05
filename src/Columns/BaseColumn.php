@@ -11,11 +11,13 @@ abstract class BaseColumn
     use Configurable;
 
     /**
+     * Column title
      * @var string
      */
     public $title = '';
 
     /**
+     * Column value. Could be an attribute,
      * @var string|mixed
      */
     public $value = '';
@@ -31,12 +33,12 @@ abstract class BaseColumn
     public $contentHtmlOptions = [];
 
     /**
-     * @var string - allowed: raw, url, email, text, image
+     * @var array - allowed: raw, url, email, text, image
      */
-    public $contentFormat = 'text';
+    public $formatters = ['text'];
 
     /**
-     * Value when
+     * Value when column is empty
      * @var string
      */
     public $emptyValue = '-';
@@ -61,7 +63,7 @@ abstract class BaseColumn
             'value' => 'any',
             'headerHtmlOptions' => 'array',
             'contentHtmlOptions' => 'array',
-            'contentFormat' => 'string',
+            'formatters' => 'array',
             'emptyValue' => 'string',
         ];
     }
@@ -102,25 +104,12 @@ abstract class BaseColumn
     {
         $value = $this->_renderValue($row);
 
-        switch ($this->contentFormat) {
-            case 'raw':
-                return $value;
-
-            case 'text':
-                return htmlentities($value);
-
-            case 'url':
-                return '<a href="' . htmlspecialchars($value, ENT_QUOTES) . '">' . htmlentities($value) . '</a>';
-
-            case 'email':
-                return '<a href="mailto:' . htmlspecialchars($value, ENT_QUOTES) . '">' . htmlentities($value) . '</a>';
-
-            case 'image':
-                return '<img src="' . htmlspecialchars($value, ENT_QUOTES) . '">';
-
-            default:
-                throw new GridViewConfigException('Invalid content format for attribute collumn: ' . $this->value);
+        foreach ($this->formatters as $formatter) {
+            $className = GridViewHelper::resolveAlias($formatter);
+            $value = (new $className)->format($value);
         }
+
+        return $value;
     }
 
 }

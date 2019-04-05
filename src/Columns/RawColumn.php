@@ -7,7 +7,7 @@ class RawColumn extends BaseColumn
     /**
      * @var string
      */
-    public $contentFormat = 'raw';
+    public $formatters = 'raw';
 
     /**
      * @return array
