@@ -8,7 +8,6 @@ trait Configurable
 {
     /**
      * Allows to load config into object properties
-     * @param object $object
      * @param array $config
      * @throws GridViewConfigException
      */
@@ -35,8 +34,6 @@ trait Configurable
 
     /**
      * Allows to test attributes and types in config
-     * @param $object
-     * @param array $tests
      * @throws GridViewConfigException
      */
     protected function testConfig()

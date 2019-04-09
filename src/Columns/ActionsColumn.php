@@ -21,7 +21,7 @@ class ActionsColumn extends BaseColumn
     /**
      * @var string
      */
-    public $formatters = 'raw';
+    public $formatters = [];
 
     /**
      * @return array

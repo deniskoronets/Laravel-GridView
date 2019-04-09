@@ -2,12 +2,13 @@
 
 namespace Woo\GridView\Columns;
 
-use Woo\GridView\Exceptions\ColumnRenderException;
 use Woo\GridView\Exceptions\GridViewConfigException;
 use Woo\GridView\GridViewHelper;
 
 class AttributeColumn extends BaseColumn
 {
+    public $formatters = ['text'];
+
     /**
      * AttributeColumn constructor.
      * @param $config
@@ -44,14 +45,15 @@ class AttributeColumn extends BaseColumn
          * Extract dots notation (column.sub.sub)
          */
         foreach ($exp as $part) {
+
             if (isset($path[$part])) {
                 $path = $path[$part];
 
             } elseif (isset($path->$part)) {
                 $path = $path[$part];
+            } else {
+                return $this->emptyValue;
             }
-
-            return $this->emptyValue;
         }
 
         return $path;

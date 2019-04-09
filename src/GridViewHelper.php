@@ -4,7 +4,13 @@ namespace Woo\GridView;
 
 use Woo\GridView\Columns\ActionsColumn;
 use Woo\GridView\Columns\AttributeColumn;
-use Woo\GridView\Columns\RawColumn;
+use Woo\GridView\Columns\BladeColumn;
+use Woo\GridView\Columns\CallbackColumn;
+use Woo\GridView\Columns\ViewColumn;
+use Woo\GridView\Formatters\EmailFormatter;
+use Woo\GridView\Formatters\ImageFormatter;
+use Woo\GridView\Formatters\TextFormatter;
+use Woo\GridView\Formatters\UrlFormatter;
 use Woo\GridView\Renderers\DefaultRenderer;
 
 class GridViewHelper
@@ -16,11 +22,16 @@ class GridViewHelper
     private static $aliases = [
         'column' => [
             'attribute' => AttributeColumn::class,
-            'raw' => RawColumn::class,
+            'raw' => CallbackColumn::class,
+            'callback' => CallbackColumn::class,
             'actions' => ActionsColumn::class,
+            'view' => ViewColumn::class,
         ],
-        'formatters' => [
-
+        'formatter' => [
+            'email' => EmailFormatter::class,
+            'image' => ImageFormatter::class,
+            'text' => TextFormatter::class,
+            'url' => UrlFormatter::class,
         ],
         'renderer' => [
             'default' => DefaultRenderer::class,
@@ -91,7 +102,7 @@ class GridViewHelper
         return ucwords(
             trim(
                 preg_replace_callback(
-                    '/([A-Z]|_|.)/',
+                    '/([A-Z]|_|\.)/',
                     function($word) {
                         $word = $word[0];
 

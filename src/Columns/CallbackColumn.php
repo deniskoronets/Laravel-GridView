@@ -2,12 +2,12 @@
 
 namespace Woo\GridView\Columns;
 
-class RawColumn extends BaseColumn
+class CallbackColumn extends BaseColumn
 {
     /**
      * @var string
      */
-    public $formatters = 'raw';
+    public $formatters = ['raw'];
 
     /**
      * @return array

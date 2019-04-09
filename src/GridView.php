@@ -2,9 +2,12 @@
 
 namespace Woo\GridView;
 
+use Closure;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Woo\GridView\Columns\AttributeColumn;
 use Woo\GridView\Columns\BaseColumn;
-use Woo\GridView\Columns\RawColumn;
+use Woo\GridView\Columns\CallbackColumn;
 use Woo\GridView\DataProviders\DataProviderInterface;
 use Woo\GridView\Renderers\DefaultRenderer;
 use Woo\GridView\Renderers\BaseRenderer;
@@ -13,6 +16,18 @@ use Woo\GridView\Traits\Configurable;
 class GridView
 {
     use Configurable;
+
+    /**
+     * Counter for ids
+     * @var int
+     */
+    private static $counter = 0;
+
+    /**
+     * Grid id (used for request handling, for
+     * @var int
+     */
+    private $id;
 
     /**
      * DataProvider provides gridview with the data for representation
@@ -61,13 +76,47 @@ class GridView
     ];
 
     /**
+     * @var Paginator
+     */
+    protected $pagination;
+
+    /**
+     * @var GridViewRequest
+     */
+    protected $request;
+
+    /**
      * GridView constructor.
      * @param array $config
      * @throws Exceptions\GridViewConfigException
      */
     public function __construct(array $config)
     {
+        $this->id = self::$counter++;
+
         $this->loadConfig($config);
+
+        /**
+         * Making renderer
+         */
+        if (!is_object($this->renderer)) {
+            $className = GridViewHelper::resolveAlias('renderer', $this->renderer);
+            $this->renderer = new $className($this->rendererOptions);
+        }
+
+        /**
+         * Build columns from config
+         */
+        $this->buildColumns();
+
+        $this->request = GridViewRequest::parse($this->id);
+
+        $this->pagination = new LengthAwarePaginator(
+            $this->dataProvider->getData($this->request->page, $this->rowsPerPage),
+            $this->dataProvider->getCount(),
+            $this->rowsPerPage,
+            $this->request->page
+        );
     }
 
     /**
@@ -107,9 +156,9 @@ class GridView
                 ];
             }
 
-            if ($columnOptions instanceof \Closure) {
+            if ($columnOptions instanceof Closure) {
                 $columnOptions = [
-                    'class' => RawColumn::class,
+                    'class' => CallbackColumn::class,
                     'value' => $columnOptions,
                     'title' => GridViewHelper::columnTitle($key),
                 ];
@@ -121,11 +170,6 @@ class GridView
             if (strpos($columnOptions['value'], 'view:') === 0) {
                 $columnOptions['class'] = 'view';
                 $columnOptions['value'] = str_replace('view:', '', $columnOptions['value']);
-            }
-
-            if (strpos($columnOptions['value'], 'blade:') === 0) {
-                $columnOptions['class'] = 'blade';
-                $columnOptions['value'] = str_replace('blade:', '', $columnOptions['value']);
             }
 
             $columnOptions = array_merge($this->columnOptions, $columnOptions);
@@ -141,28 +185,21 @@ class GridView
      */
     public function render()
     {
-        /**
-         * Making renderer
-         */
-        if (!is_object($this->renderer)) {
-            $className = GridViewHelper::resolveAlias('renderer', $this->renderer);
-            $this->renderer = new $className($this->rendererOptions);
-        }
-
-        /**
-         * Build columns from config
-         */
-        $this->buildColumns();
-
         return $this->renderer->render($this);
     }
 
-    /**
-     * Wrapper for draw method
-     * @see View::draw()
-     */
-    public function __toString()
+    public function getPagination()
     {
-        return $this->render();
+        return $this->pagination;
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 }

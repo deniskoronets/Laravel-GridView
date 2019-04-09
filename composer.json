@@ -15,5 +15,12 @@
         "psr-4": {
             "Woo\\GridView\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Woo\\GridView\\GridViewServiceProvider"
+            ]
+        }
     }
 }

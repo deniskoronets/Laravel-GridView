@@ -35,7 +35,7 @@ abstract class BaseColumn
     /**
      * @var array - allowed: raw, url, email, text, image
      */
-    public $formatters = ['text'];
+    public $formatters = [];
 
     /**
      * Value when column is empty
@@ -105,7 +105,7 @@ abstract class BaseColumn
         $value = $this->_renderValue($row);
 
         foreach ($this->formatters as $formatter) {
-            $className = GridViewHelper::resolveAlias($formatter);
+            $className = GridViewHelper::resolveAlias('formatter', $formatter);
             $value = (new $className)->format($value);
         }
 

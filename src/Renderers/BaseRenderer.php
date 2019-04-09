@@ -2,6 +2,8 @@
 
 namespace Woo\GridView\Renderers;
 
+use Illuminate\Pagination\Paginator;
+use Woo\GridView\Exceptions\GridViewConfigException;
 use Woo\GridView\GridView;
 use Woo\GridView\Traits\Configurable;
 
@@ -10,23 +12,18 @@ abstract class BaseRenderer
     use Configurable;
 
     /**
-     * HTML ID of container
-     * @var string
+     * @var GridView
      */
-    public $id = '';
+    public $gridView;
 
     /**
      * BaseRenderer constructor.
      * @param $config
-     * @throws \Woo\GridView\Exceptions\GridViewConfigException
+     * @throws GridViewConfigException
      */
     public function __construct($config)
     {
         $this->loadConfig($config);
-
-        if (empty($this->id)) {
-            $this->id = 'grid_' . uniqid();
-        }
     }
 
     /**
@@ -35,9 +32,9 @@ abstract class BaseRenderer
     protected function configTests(): array
     {
         return [
-            'id' => 'string',
+            'gridView' =>  GridView::class,
         ];
     }
 
-    public abstract function render(GridView $view) : string;
+    public abstract function render() : string;
 }
