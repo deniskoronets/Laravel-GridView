@@ -13,8 +13,16 @@ class DefaultRenderer extends BaseRenderer
      */
     public function render(): string
     {
-        return view('woo_gridview::render-default', [
-            'grid' => $this->gridView
+        $filters = [];
+        foreach ($this->gridView->columns as $column) {
+            if ($column->filter) {
+                $filters[$column->filter->name] = $this->gridView->getRequest()->getFilterValue($column->filter->name);
+            }
+        }
+
+        return view('woo_gridview::renderers.default', [
+            'grid' => $this->gridView,
+            'filters' => $filters,
         ])->render();
     }
 }

@@ -3,6 +3,8 @@
 namespace Woo\GridView\Columns;
 
 use Woo\GridView\Exceptions\GridViewConfigException;
+use Woo\GridView\Filters\BaseFilter;
+use Woo\GridView\Filters\TextFilter;
 use Woo\GridView\GridViewHelper;
 use Woo\GridView\Traits\Configurable;
 
@@ -21,6 +23,11 @@ abstract class BaseColumn
      * @var string|mixed
      */
     public $value = '';
+
+    /**
+     * @var BaseFilter
+     */
+    public $filter;
 
     /**
      * @var array
@@ -65,6 +72,7 @@ abstract class BaseColumn
             'contentHtmlOptions' => 'array',
             'formatters' => 'array',
             'emptyValue' => 'string',
+            'filter' => BaseFilter::class . '|null',
         ];
     }
 
@@ -72,7 +80,7 @@ abstract class BaseColumn
      * Formatted header html options
      * @return string
      */
-    public function headerHtmlOptions() : string
+    public function compileHeaderHtmlOptions() : string
     {
         return GridViewHelper::htmlOptionsToString($this->headerHtmlOptions);
     }
@@ -82,7 +90,7 @@ abstract class BaseColumn
      * @param array $context
      * @return string
      */
-    public function contentHtmlOptions(array $context) : string
+    public function compileContentHtmlOptions(array $context) : string
     {
         return GridViewHelper::htmlOptionsToString($this->contentHtmlOptions, $context);
     }
@@ -98,7 +106,6 @@ abstract class BaseColumn
      * Renders column content
      * @param $row
      * @return string
-     * @throws GridViewConfigException
      */
     public function renderValue($row)
     {

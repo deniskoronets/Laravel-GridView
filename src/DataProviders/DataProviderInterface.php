@@ -19,9 +19,12 @@ interface DataProviderInterface
 
     /**
      * Should return a list of data for current page
+     * @param array $filters
+     * @param string $orderBy
+     * @param string $orderSort
      * @param int $page
      * @param int $perPage - amount of records per page
      * @return mixed
      */
-    public function getData(int $page, int $perPage);
+    public function getData(array $filters, string $orderBy, string $orderSort, int $page, int $perPage);
 }

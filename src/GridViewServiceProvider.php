@@ -13,13 +13,17 @@ class GridViewServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		$this->loadViewsFrom(__DIR__.'/../views', 'woo_gridview');
+		$this->loadViewsFrom(__DIR__ . '/../resources/views', 'woo_gridview');
 
 		require_once __DIR__ . '/functions.php';
 
         \Blade::directive('grid', function ($expression) {
             return "<?php echo grid($expression)->render() ?>";
         });
+
+        $this->publishes([
+            __DIR__ . '/../public' => 'public/vendor/grid-view',
+        ], 'public');
 	}
 
 	public function register()

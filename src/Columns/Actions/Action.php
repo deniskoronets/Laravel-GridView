@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Woo\GridView\Columns\Actions;
-
 
 class Action
 {
@@ -32,7 +30,7 @@ class Action
 
     public function render()
     {
-        return view('woo_gridview::action', [
+        return view('woo_gridview::columns.action', [
             'url' => $this->url,
             'content' => $this->content,
             'method' => $this->method,

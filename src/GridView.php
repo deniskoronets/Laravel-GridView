@@ -37,7 +37,7 @@ class GridView
 
     /**
      * Columns config. You may specify array or GridColumn instance
-     * @var array
+     * @var BaseColumn[]
      */
     public $columns = [];
 
@@ -76,6 +76,12 @@ class GridView
     ];
 
     /**
+     * Indicate if filters will be shown or not
+     * @var bool
+     */
+    public $showFilters = true;
+
+    /**
      * @var Paginator
      */
     protected $pagination;
@@ -101,7 +107,11 @@ class GridView
          */
         if (!is_object($this->renderer)) {
             $className = GridViewHelper::resolveAlias('renderer', $this->renderer);
-            $this->renderer = new $className($this->rendererOptions);
+            $this->renderer = new $className(array_merge(
+                $this->rendererOptions, [
+                    'gridView' => $this,
+                ]
+            ));
         }
 
         /**
@@ -112,7 +122,12 @@ class GridView
         $this->request = GridViewRequest::parse($this->id);
 
         $this->pagination = new LengthAwarePaginator(
-            $this->dataProvider->getData($this->request->page, $this->rowsPerPage),
+            $this->dataProvider->getData(
+                $this->request->filters,
+                $this->request->sortColumn ?? '',
+                $this->request->sortOrder ?? 'DESC',
+                $this->request->page, $this->rowsPerPage
+            ),
             $this->dataProvider->getCount(),
             $this->rowsPerPage,
             $this->request->page
@@ -130,6 +145,7 @@ class GridView
             'renderer' => BaseRenderer::class,
             'rowsPerPage' => 'int',
             'tableHtmlOptions' => 'array',
+            'showFilters' => 'boolean',
         ];
     }
 
@@ -201,5 +217,10 @@ class GridView
     public function getId()
     {
         return $this->id;
+    }
+
+    public function compileTableHtmlOptions()
+    {
+        return GridViewHelper::htmlOptionsToString($this->tableHtmlOptions);
     }
 }

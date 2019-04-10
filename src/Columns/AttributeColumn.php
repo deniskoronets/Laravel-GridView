@@ -2,12 +2,16 @@
 
 namespace Woo\GridView\Columns;
 
+use Closure;
 use Woo\GridView\Exceptions\GridViewConfigException;
+use Woo\GridView\Filters\TextFilter;
 use Woo\GridView\GridViewHelper;
 
 class AttributeColumn extends BaseColumn
 {
     public $formatters = ['text'];
+
+    public $filter = TextFilter::class;
 
     /**
      * AttributeColumn constructor.
@@ -18,9 +22,28 @@ class AttributeColumn extends BaseColumn
     {
         parent::__construct($config);
 
+        $this->buildFilter();
+
         if (empty($this->title)) {
             $this->title = GridViewHelper::columnTitle($this->value);
         }
+    }
+
+    protected function buildFilter()
+    {
+        if (is_null($this->filter) || is_object($this->filter)) {
+            return;
+        }
+
+        if (is_string($this->filter)) {
+            $this->filter = [
+                'class' => $this->filter,
+                'name' => $this->value,
+            ];
+        }
+
+        $className = GridViewHelper::resolveAlias('filter', $this->filter['class']);
+        $this->filter = new $className($this->filter);
     }
 
     /**

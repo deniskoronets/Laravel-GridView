@@ -14,7 +14,7 @@ class EloquentDataProvider implements DataProviderInterface
      */
     public function __construct(Builder $query)
     {
-        $this->query = $query;
+        $this->query = clone $query;
     }
 
     /**
@@ -40,12 +40,20 @@ class EloquentDataProvider implements DataProviderInterface
     /**
      * @inheritdoc
      */
-    public function getData(int $page, int $perPage)
+    public function getData(array $filters, string $orderBy, string $orderSort, int $page, int $perPage)
     {
+        foreach ($filters as $field => $value) {
+            $this->query->where($field, 'LIKE', '%' . $value . '%');
+        }
+
+        if ($orderBy) {
+            $this->query->orderBy($orderBy, $orderSort);
+        }
+
         if ($perPage == 0) {
             return $this->query->get();
         }
 
-        return (clone $this->query)->paginate($perPage, ['*'], 'page', $page);
+        return $this->query->offset(($page - 1) * $perPage)->limit($perPage)->get();
     }
 }

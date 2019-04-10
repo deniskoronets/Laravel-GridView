@@ -3,6 +3,7 @@
 namespace Woo\GridView\Columns;
 
 use Illuminate\View\Factory;
+use Throwable;
 
 class ViewColumn extends BaseColumn
 {
@@ -12,7 +13,7 @@ class ViewColumn extends BaseColumn
      * Render column value for row
      * @param array|object $row
      * @return string|mixed
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function _renderValue($row)
     {

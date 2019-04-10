@@ -32,7 +32,7 @@ abstract class BaseRenderer
     protected function configTests(): array
     {
         return [
-            'gridView' =>  GridView::class,
+            'gridView' => GridView::class,
         ];
     }
 

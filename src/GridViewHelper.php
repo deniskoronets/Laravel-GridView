@@ -7,6 +7,7 @@ use Woo\GridView\Columns\AttributeColumn;
 use Woo\GridView\Columns\BladeColumn;
 use Woo\GridView\Columns\CallbackColumn;
 use Woo\GridView\Columns\ViewColumn;
+use Woo\GridView\Filters\TextFilter;
 use Woo\GridView\Formatters\EmailFormatter;
 use Woo\GridView\Formatters\ImageFormatter;
 use Woo\GridView\Formatters\TextFormatter;
@@ -32,6 +33,9 @@ class GridViewHelper
             'image' => ImageFormatter::class,
             'text' => TextFormatter::class,
             'url' => UrlFormatter::class,
+        ],
+        'filter' => [
+            'text' => TextFilter::class,
         ],
         'renderer' => [
             'default' => DefaultRenderer::class,
