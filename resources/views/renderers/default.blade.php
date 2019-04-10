@@ -10,19 +10,7 @@
      data-sort-column="{{ $grid->getRequest()->sortColumn }}"
      data-sort-order="{{ $grid->getRequest()->sortOrder }}"
 >
-
-    <form class="d-none grid-form" action="" method="GET">
-        <input type="hidden" name="sort" v-model="sortColumn">
-        <input type="hidden" name="order" v-model="sortOrder">
-
-        @if ($grid->showFilters)
-            @foreach ($grid->columns as $column)
-                @if ($column->filter)
-                    <input type="hidden" name="filters[{{ $column->filter->name }}]" v-model="filters['{{ $column->filter->name }}']" v-if="filters['{{ $column->filter->name }}']">
-                @endif
-            @endforeach
-        @endif
-    </form>
+    @include('woo_gridview::grid-form')
 
     <table {!! $grid->compileTableHtmlOptions() !!}>
         <thead>
@@ -33,11 +21,7 @@
 
                         @if ($column instanceof \Woo\GridView\Columns\AttributeColumn)
                             @if ($grid->getRequest()->sortColumn == $column->value)
-                                @if ($grid->getRequest()->sortOrder == 'ASC')
-                                    ˅
-                                @else
-                                    ˄
-                                @endif
+                                <span class="sort-{{ strtolower($grid->getRequest()->sortOrder) }}"></span>
                             @endif
                         @endif
                     </th>
@@ -73,7 +57,7 @@
         </tbody>
         @if ($grid->rowsPerPage != 0)
             <caption>
-                {!! $grid->getPagination()->render() !!}
+                {!! $grid->getPagination()->render('woo_gridview::grid-pagination', ['gridId' => $grid->getId()]) !!}
             </caption>
         @endif
     </table>

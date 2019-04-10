@@ -2,7 +2,6 @@
 
 namespace Woo\GridView\Columns;
 
-use Woo\GridView\Exceptions\GridViewConfigException;
 use Woo\GridView\Filters\BaseFilter;
 use Woo\GridView\Filters\TextFilter;
 use Woo\GridView\GridViewHelper;
@@ -58,6 +57,33 @@ abstract class BaseColumn
     public function __construct(array $config)
     {
         $this->loadConfig($config);
+
+        $this->buildFilter();
+    }
+
+    protected function buildFilter()
+    {
+        if (is_null($this->filter) || is_object($this->filter)) {
+            return;
+        }
+
+        if (is_string($this->filter)) {
+            $this->filter = [
+                'class' => $this->filter,
+                'name' => $this->value,
+            ];
+        }
+
+        if (empty($this->filter['class'])) {
+            $this->filter['class'] = TextFilter::class;
+        }
+
+        if (empty($this->filter['name'])) {
+            $this->filter['name'] = $this->value;
+        }
+
+        $className = GridViewHelper::resolveAlias('filter', $this->filter['class']);
+        $this->filter = new $className($this->filter);
     }
 
     /**

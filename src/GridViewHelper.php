@@ -7,6 +7,7 @@ use Woo\GridView\Columns\AttributeColumn;
 use Woo\GridView\Columns\BladeColumn;
 use Woo\GridView\Columns\CallbackColumn;
 use Woo\GridView\Columns\ViewColumn;
+use Woo\GridView\Filters\DropdownFilter;
 use Woo\GridView\Filters\TextFilter;
 use Woo\GridView\Formatters\EmailFormatter;
 use Woo\GridView\Formatters\ImageFormatter;
@@ -36,6 +37,7 @@ class GridViewHelper
         ],
         'filter' => [
             'text' => TextFilter::class,
+            'dropdown' => DropdownFilter::class,
         ],
         'renderer' => [
             'default' => DefaultRenderer::class,
@@ -120,5 +122,20 @@ class GridViewHelper
                 )
             )
         );
+    }
+
+    /**
+     * Helper for internal purposes
+     * @param $id
+     * @param $component
+     * @return string
+     */
+    public static function gridIdFormatter($id, $component)
+    {
+        if ($id == 0) {
+            return $component;
+        }
+
+        return 'grid[' . $id . '][' . $component . ']';
     }
 }

@@ -3,39 +3,62 @@ import Vue from 'vue'
 class WooGridView {
 
     constructor(selector) {
+        this.selector = selector;
+        this.container = document.querySelector(selector);
+        this.initVue();
 
-        const container = this.container = document.querySelector(selector);
+        require('../scss/grid.scss');
+    }
 
+    initVue() {
         let filterTimeout = null;
+        const self = this;
 
-        this.vm = new Vue({
-            el: selector,
+        new Vue({
+            el: this.selector,
             runtimeCompiler: false,
 
             data() {
                 return {
-                    filters: JSON.parse(container.dataset.filters),
-                    sortColumn: container.dataset.sortColumn,
-                    sortOrder: container.dataset.sortOrder,
+                    filters: JSON.parse(self.container.dataset.filters),
+                    sortColumn: self.container.dataset.sortColumn,
+                    sortDesc: self.container.dataset.sortOrder === 'DESC',
                 }
             },
 
             methods: {
-                filter() {
+                filter(skipDelay = false) {
+
+                    if (skipDelay) {
+                        this.$nextTick(() => {
+                            self.sendForm();
+                        });
+                        return;
+                    }
+
                     if (filterTimeout) {
                         clearTimeout(filterTimeout);
                     }
 
                     filterTimeout = setTimeout(() => {
-                        document.querySelector(selector + ' .grid-form').submit();
-                    }, 500);
+                        self.sendForm();
+                    }, 1000);
                 },
 
                 sort(column) {
-                    //this.
+                    this.sortColumn = column;
+                    this.sortDesc = !this.sortDesc;
+
+                    this.$nextTick(() => {
+                        self.sendForm();
+                    });
                 }
             }
         });
+    }
+
+    sendForm() {
+        document.querySelector(this.selector + ' .grid-form').submit();
     }
 }
 

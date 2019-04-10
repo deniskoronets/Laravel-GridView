@@ -32,10 +32,10 @@ class GridViewRequest
         $request = Request::instance();
 
         return new GridViewRequest([
-            'page' => $request->get($gridId == 0 ? 'page' : 'g' . $gridId . '.page', 1),
-            'sortColumn' => $request->get($gridId == 0 ? 'sort' : 'g' . $gridId . '.sort'),
-            'sortOrder' => $request->get($gridId == 0 ? 'order' : 'g' . $gridId . '.order'),
-            'filters' => $request->get($gridId == 0 ? 'filters' : 'g' . $gridId . '.filters', []),
+            'page' => (int)$request->input($gridId == 0 ? 'page' : 'grid.' . $gridId . '.page', 1),
+            'sortColumn' => $request->input($gridId == 0 ? 'sort' : 'grid.' . $gridId . '.sort'),
+            'sortOrder' => $request->input($gridId == 0 ? 'order' : 'grid.' . $gridId . '.order'),
+            'filters' => $request->input($gridId == 0 ? 'filters' : 'grid.' . $gridId . '.filters', []),
         ]);
     }
 
