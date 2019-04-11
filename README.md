@@ -71,7 +71,7 @@ sample usage in a view file:
 
 | Property          | Description                                                           |
 | ----------------- | --------------------------------------------------------------------- |
-| dataProvider      | Should be an object, implement DataProviderInterface                  |
+| dataProvider      | Should be an object, extending BaseDataProvider                       |
 | columns           | A list of columns. In compiling, columns are                          |
 | columnOptions     | A list of basic options for all collumns                              |
 | renderer          | Should be a class path. Could be used in order to override renderer   |

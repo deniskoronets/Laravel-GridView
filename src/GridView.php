@@ -8,7 +8,7 @@ use Illuminate\Pagination\Paginator;
 use Woo\GridView\Columns\AttributeColumn;
 use Woo\GridView\Columns\BaseColumn;
 use Woo\GridView\Columns\CallbackColumn;
-use Woo\GridView\DataProviders\DataProviderInterface;
+use Woo\GridView\DataProviders\BaseDataProvider;
 use Woo\GridView\Renderers\DefaultRenderer;
 use Woo\GridView\Renderers\BaseRenderer;
 use Woo\GridView\Traits\Configurable;
@@ -31,7 +31,7 @@ class GridView
 
     /**
      * DataProvider provides gridview with the data for representation
-     * @var DataProviderInterface
+     * @var BaseDataProvider
      */
     public $dataProvider;
 
@@ -140,7 +140,7 @@ class GridView
     protected function configTests(): array
     {
         return [
-            'dataProvider' => DataProviderInterface::class,
+            'dataProvider' => BaseDataProvider::class,
             'columns' => 'array',
             'renderer' => BaseRenderer::class,
             'rowsPerPage' => 'int',

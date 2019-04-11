@@ -4,7 +4,7 @@ namespace Woo\GridView\DataProviders;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class EloquentDataProvider implements DataProviderInterface
+class EloquentDataProvider extends BaseDataProvider
 {
     protected $query;
 
@@ -28,32 +28,22 @@ class EloquentDataProvider implements DataProviderInterface
     /**
      * @inheritdoc
      */
-    public function getTotalPages(int $perPage): int
-    {
-        if ($perPage == 0) {
-            return 1;
-        }
-
-        return ceil($this->getCount() / $perPage);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getData(array $filters, string $orderBy, string $orderSort, int $page, int $perPage)
     {
+        $query = clone $this->query;
+
         foreach ($filters as $field => $value) {
-            $this->query->where($field, 'LIKE', '%' . $value . '%');
+            $query->where($field, 'LIKE', '%' . $value . '%');
         }
 
         if ($orderBy) {
-            $this->query->orderBy($orderBy, $orderSort);
+            $query->orderBy($orderBy, $orderSort);
         }
 
         if ($perPage == 0) {
-            return $this->query->get();
+            return $query->get();
         }
 
-        return $this->query->offset(($page - 1) * $perPage)->limit($perPage)->get();
+        return $query->offset(($page - 1) * $perPage)->limit($perPage)->get();
     }
 }
