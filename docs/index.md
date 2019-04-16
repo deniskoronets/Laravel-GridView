@@ -1,7 +1,7 @@
 # GridView v2
 
 <p align="center">
-    <img src="./screen.png" width="500">
+    <img src="./screen.png">
 </p>
 
 Completely reused, rebuild and refactored gridview for laravel!
@@ -17,8 +17,8 @@ or add into `composer.json`:
 ```
 
 *In case you use Laravel 5.4 or lower, please add:*
-1) `Woo\GridView\GridViewServiceProvider::class` into `config/app.php`
-2) Run `php artisan vendor:publish --tag=public --force`
+- `Woo\GridView\GridViewServiceProvider::class` into `config/app.php`
+- Run `php artisan vendor:publish --tag=public --force`
 
 Otherwise, Laravel autodiscover will load all needed stuff after composer install the package.
 
@@ -42,6 +42,6 @@ New features are:
 - Filters are introduced
 - Formatters are detouched into classes so now you can make your own formatters
 - GridViewHelper is now open for adding extra aliases on app boot (you can make it through )
-- <!> Achtung! No complete backward compatibility with v1. Please update with your own risk! In general, Action column api is totally different now - it was totally rebuild.
+- **<!> Achtung! No complete backward compatibility with v1. Please update with your own risk! In general, Action column api is totally different now - it was totally rebuild.**
 
-<b>Made with ❤ by <a href="https://woo.zp.ua">denis</b>
+<b>Made with ❤ by <a href="https://woo.zp.ua">denis</a></b>
