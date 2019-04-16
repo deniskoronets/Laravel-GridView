@@ -2,13 +2,13 @@
 
 namespace Woo\GridView\Traits;
 
+use Closure;
 use Woo\GridView\Exceptions\GridViewConfigException;
 
 trait Configurable
 {
     /**
      * Allows to load config into object properties
-     * @param object $object
      * @param array $config
      * @throws GridViewConfigException
      */
@@ -25,23 +25,18 @@ trait Configurable
     }
 
     /**
-     * Override this method in classes
+     * Should specify tests
      * @return array
      */
-    protected function configTests() : array
-    {
-        return [];
-    }
+    abstract protected function configTests() : array;
 
     /**
      * Allows to test attributes and types in config
-     * @param $object
-     * @param array $tests
      * @throws GridViewConfigException
      */
     protected function testConfig()
     {
-        foreach ($this->configTests() as $property => $test) {
+        foreach ($this->configTests() as $property => $tests) {
 
             if (!property_exists($this, $property)) {
                 throw new GridViewConfigException(
@@ -49,39 +44,50 @@ trait Configurable
                 );
             }
 
-            if (is_scalar($test)) {
+            $testPassed = true;
+            $testMessage = 'Validation failed';
 
-                $testPassed = true;
+            foreach (explode('|', $tests) as $test) {
 
                 switch ($test) {
                     case 'int':
                         $testPassed = is_numeric($this->$property);
+                        $testMessage = 'Property should be numeric';
                         break;
 
                     case 'string':
                         $testPassed = is_string($this->$property);
+                        $testMessage = 'Property should be a string';
                         break;
 
                     case 'array':
                         $testPassed = is_array($this->$property);
+                        $testMessage = 'Property should be an array';
                         break;
 
                     case 'closure':
-                        $testPassed = $this->$property instanceof \Closure;
+                        $testPassed = $this->$property instanceof Closure;
+                        $testMessage = 'Property should be a valid callback (Closure instance)';
+                        break;
+
+                    case 'boolean':
+                        $testPassed = is_bool($this->$property);
+                        $testMessage = 'Property should be boolean';
                         break;
 
                     case 'any':
                         break;
 
                     default:
-                        $testPassed = is_subclass_of($this->$property, $test);
+                        $testPassed = $testPassed || is_a($this->$property, $test) || is_subclass_of($this->$property, $test);
+                        $testMessage = 'Property should be ' . $test . ' instance/class reference, got ' . print_r($this->$property, 1);
                 }
+            }
 
-                if (!$testPassed) {
-                    throw new GridViewConfigException('
-                        Test ' . $test . ' has failed on ' . get_class($this) . '::' . $property
-                    );
-                }
+            if (!$testPassed) {
+                throw new GridViewConfigException(
+                    'Tests ' . $tests . ' has failed on ' . get_class($this) . '::' . $property . ': ' . $testMessage
+                );
             }
         }
     }

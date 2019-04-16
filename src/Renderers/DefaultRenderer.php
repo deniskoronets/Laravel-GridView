@@ -8,22 +8,21 @@ use Woo\GridView\GridViewHelper;
 class DefaultRenderer extends BaseRenderer
 {
     /**
-     * @param GridView $view
      * @return string
      * @throws \Throwable
      */
-    public function render(GridView $view): string
+    public function render(): string
     {
-        $page = intval($_GET['page'] ?? 1);
+        $filters = [];
+        foreach ($this->gridView->columns as $column) {
+            if ($column->filter) {
+                $filters[$column->filter->name] = $this->gridView->getRequest()->getFilterValue($column->filter->name);
+            }
+        }
 
-        return view('woo_gridview::render-default', [
-            'columns' => $view->columns,
-            'data' => $view->dataProvider->getData($page, $view->rowsPerPage),
-            'tableHtmlOptions' => GridViewHelper::htmlOptionsToString($view->tableHtmlOptions),
-            'dataProvider' => $view->dataProvider,
-            'perPage' => $view->rowsPerPage,
-            'currentPage' => $page,
-            'containerId' => $this->id,
+        return view('woo_gridview::renderers.default', [
+            'grid' => $this->gridView,
+            'filters' => $filters,
         ])->render();
     }
 }

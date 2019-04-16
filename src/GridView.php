@@ -2,9 +2,13 @@
 
 namespace Woo\GridView;
 
+use Closure;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Woo\GridView\Columns\AttributeColumn;
 use Woo\GridView\Columns\BaseColumn;
-use Woo\GridView\DataProviders\DataProviderInterface;
+use Woo\GridView\Columns\CallbackColumn;
+use Woo\GridView\DataProviders\BaseDataProvider;
 use Woo\GridView\Renderers\DefaultRenderer;
 use Woo\GridView\Renderers\BaseRenderer;
 use Woo\GridView\Traits\Configurable;
@@ -14,16 +18,31 @@ class GridView
     use Configurable;
 
     /**
-     * @var DataProviderInterface
+     * Counter for ids
+     * @var int
+     */
+    private static $counter = 0;
+
+    /**
+     * Grid id (used for request handling, for
+     * @var int
+     */
+    private $id;
+
+    /**
+     * DataProvider provides gridview with the data for representation
+     * @var BaseDataProvider
      */
     public $dataProvider;
 
     /**
-     * @var array
+     * Columns config. You may specify array or GridColumn instance
+     * @var BaseColumn[]
      */
     public $columns = [];
 
     /**
+     * Common options for all columns, will be appended to all columns configs
      * @var array
      */
     public $columnOptions = [
@@ -31,26 +50,46 @@ class GridView
     ];
 
     /**
+     * Renders the final UI
      * @var string|BaseRenderer
      */
     public $renderer = DefaultRenderer::class;
 
     /**
+     * Allows to pass some options into renderer/customize rendered behavior
      * @var array
      */
     public $rendererOptions = [];
 
     /**
+     * Controls amount of data per page
      * @var int
      */
     public $rowsPerPage = 25;
 
     /**
+     * Allows to tune the <table> tag with html options
      * @var array
      */
     public $tableHtmlOptions = [
         'class' => 'table table-bordered gridview-table',
     ];
+
+    /**
+     * Indicate if filters will be shown or not
+     * @var bool
+     */
+    public $showFilters = true;
+
+    /**
+     * @var Paginator
+     */
+    protected $pagination;
+
+    /**
+     * @var GridViewRequest
+     */
+    protected $request;
 
     /**
      * GridView constructor.
@@ -59,8 +98,40 @@ class GridView
      */
     public function __construct(array $config)
     {
+        $this->id = self::$counter++;
+
         $this->loadConfig($config);
+
+        /**
+         * Making renderer
+         */
+        if (!is_object($this->renderer)) {
+            $className = GridViewHelper::resolveAlias('renderer', $this->renderer);
+            $this->renderer = new $className(array_merge(
+                $this->rendererOptions, [
+                    'gridView' => $this,
+                ]
+            ));
+        }
+
+        /**
+         * Build columns from config
+         */
         $this->buildColumns();
+
+        $this->request = GridViewRequest::parse($this->id);
+
+        $this->pagination = new LengthAwarePaginator(
+            $this->dataProvider->getData(
+                $this->request->filters,
+                $this->request->sortColumn ?? '',
+                $this->request->sortOrder ?? 'DESC',
+                $this->request->page, $this->rowsPerPage
+            ),
+            $this->dataProvider->getCount(),
+            $this->rowsPerPage,
+            $this->request->page
+        );
     }
 
     /**
@@ -69,11 +140,12 @@ class GridView
     protected function configTests(): array
     {
         return [
-            'dataProvider' => DataProviderInterface::class,
+            'dataProvider' => BaseDataProvider::class,
             'columns' => 'array',
             'renderer' => BaseRenderer::class,
             'rowsPerPage' => 'int',
             'tableHtmlOptions' => 'array',
+            'showFilters' => 'boolean',
         ];
     }
 
@@ -82,7 +154,7 @@ class GridView
      */
     protected function buildColumns()
     {
-        foreach ($this->columns as &$columnOptions) {
+        foreach ($this->columns as $key => &$columnOptions) {
 
             /**
              * In case of when column is already build
@@ -100,6 +172,22 @@ class GridView
                 ];
             }
 
+            if ($columnOptions instanceof Closure) {
+                $columnOptions = [
+                    'class' => CallbackColumn::class,
+                    'value' => $columnOptions,
+                    'title' => GridViewHelper::columnTitle($key),
+                ];
+            }
+
+            /**
+             * Inline column declaration detector
+             */
+            if (is_string($columnOptions['value']) && strpos($columnOptions['value'], 'view:') === 0) {
+                $columnOptions['class'] = 'view';
+                $columnOptions['value'] = str_replace('view:', '', $columnOptions['value']);
+            }
+
             $columnOptions = array_merge($this->columnOptions, $columnOptions);
 
             $className = GridViewHelper::resolveAlias('column', $columnOptions['class']);
@@ -108,38 +196,31 @@ class GridView
     }
 
     /**
-     * Makes an instance
-     * @param $params
-     * @return GridView
-     * @throws Exceptions\GridViewConfigException
-     */
-    public static function make($params)
-    {
-        return new self($params);
-    }
-
-    /**
      * Draws widget and return html code
      * @return string
      */
     public function render()
     {
-        if (!is_object($this->renderer)) {
-
-            $className = GridViewHelper::resolveAlias('renderer', $this->renderer);
-
-            $this->renderer = new $className($this->rendererOptions);
-        }
-
         return $this->renderer->render($this);
     }
 
-    /**
-     * Wrapper for draw method
-     * @see View::draw()
-     */
-    public function __toString()
+    public function getPagination()
     {
-        return $this->render();
+        return $this->pagination;
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function compileTableHtmlOptions()
+    {
+        return GridViewHelper::htmlOptionsToString($this->tableHtmlOptions);
     }
 }

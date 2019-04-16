@@ -2,11 +2,17 @@
 
 namespace Woo\GridView\Columns;
 
-use Woo\GridView\Exceptions\ColumnRenderException;
+use Closure;
 use Woo\GridView\Exceptions\GridViewConfigException;
+use Woo\GridView\Filters\TextFilter;
+use Woo\GridView\GridViewHelper;
 
 class AttributeColumn extends BaseColumn
 {
+    public $formatters = ['text'];
+
+    public $filter = TextFilter::class;
+
     /**
      * AttributeColumn constructor.
      * @param $config
@@ -17,7 +23,7 @@ class AttributeColumn extends BaseColumn
         parent::__construct($config);
 
         if (empty($this->title)) {
-            $this->title = ucfirst(str_replace('_', ' ', $this->value));
+            $this->title = GridViewHelper::columnTitle($this->value);
         }
     }
 
@@ -33,21 +39,27 @@ class AttributeColumn extends BaseColumn
 
     /**
      * @inheritdoc
-     * @throws ColumnRenderException
-     * @throws GridViewConfigException
      */
     public function _renderValue($row)
     {
-        if (is_array($row)) {
+        $path = $row;
+        $exp = explode('.', $this->value);
 
-            if (isset($row[$this->value]) && $row[$this->value] !== null) {
-                return $row[$this->value];
+        /**
+         * Extract dots notation (column.sub.sub)
+         */
+        foreach ($exp as $part) {
+
+            if (isset($path[$part])) {
+                $path = $path[$part];
+
+            } elseif (isset($path->$part)) {
+                $path = $path[$part];
+            } else {
+                return $this->emptyValue;
             }
-
-        } elseif (isset($row->{$this->value}) && $row->{$this->value} !== null) {
-            return $row->{$this->value};
         }
 
-        return $this->emptyValue;
+        return $path;
     }
 }

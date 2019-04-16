@@ -2,7 +2,7 @@
 
 namespace Woo\GridView\DataProviders;
 
-class ArrayDataProvider implements DataProviderInterface
+class ArrayDataProvider extends BaseDataProvider
 {
     /**
      * @var array
@@ -24,22 +24,9 @@ class ArrayDataProvider implements DataProviderInterface
     }
 
     /**
-     * Should return amount of pages
-     * @param int $perPage - amount of records per page
-     * @return int
+     * @inheritdoc
      */
-    public function getTotalPages(int $perPage) : int
-    {
-        return ceil($this->getCount() / $perPage);
-    }
-
-    /**
-     * Should return a list of data for current page
-     * @param int $page
-     * @param int $perPage - amount of records per page
-     * @return mixed
-     */
-    public function getData(int $page, int $perPage)
+    public function getData(array $filters, string $orderBy, string $orderSort, int $page, int $perPage)
     {
         return array_splice($this->data, ($page -1) * $perPage, $perPage);
     }

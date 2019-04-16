@@ -2,7 +2,8 @@
 
 namespace Woo\GridView\Columns;
 
-use Woo\GridView\Exceptions\GridViewConfigException;
+use Woo\GridView\Filters\BaseFilter;
+use Woo\GridView\Filters\TextFilter;
 use Woo\GridView\GridViewHelper;
 use Woo\GridView\Traits\Configurable;
 
@@ -11,14 +12,26 @@ abstract class BaseColumn
     use Configurable;
 
     /**
+     * Column title
      * @var string
      */
     public $title = '';
 
     /**
+     * Column value. Could be an attribute,
      * @var string|mixed
      */
     public $value = '';
+
+    /**
+     * @var BaseFilter
+     */
+    public $filter;
+
+    /**
+     * @var boolean
+     */
+    public $sortable = true;
 
     /**
      * @var array
@@ -31,12 +44,12 @@ abstract class BaseColumn
     public $contentHtmlOptions = [];
 
     /**
-     * @var string - allowed: raw, url, email, text, image
+     * @var array - allowed: raw, url, email, text, image
      */
-    public $contentFormat = 'text';
+    public $formatters = ['text'];
 
     /**
-     * Value when
+     * Value when column is empty
      * @var string
      */
     public $emptyValue = '-';
@@ -49,6 +62,33 @@ abstract class BaseColumn
     public function __construct(array $config)
     {
         $this->loadConfig($config);
+
+        $this->buildFilter();
+    }
+
+    protected function buildFilter()
+    {
+        if (is_null($this->filter) || is_object($this->filter)) {
+            return;
+        }
+
+        if (is_string($this->filter)) {
+            $this->filter = [
+                'class' => $this->filter,
+                'name' => $this->value,
+            ];
+        }
+
+        if (empty($this->filter['class'])) {
+            $this->filter['class'] = TextFilter::class;
+        }
+
+        if (empty($this->filter['name'])) {
+            $this->filter['name'] = $this->value;
+        }
+
+        $className = GridViewHelper::resolveAlias('filter', $this->filter['class']);
+        $this->filter = new $className($this->filter);
     }
 
     /**
@@ -61,8 +101,10 @@ abstract class BaseColumn
             'value' => 'any',
             'headerHtmlOptions' => 'array',
             'contentHtmlOptions' => 'array',
-            'contentFormat' => 'string',
+            'formatters' => 'array',
             'emptyValue' => 'string',
+            'sortable' => 'bool',
+            'filter' => BaseFilter::class . '|null',
         ];
     }
 
@@ -70,7 +112,7 @@ abstract class BaseColumn
      * Formatted header html options
      * @return string
      */
-    public function headerHtmlOptions() : string
+    public function compileHeaderHtmlOptions() : string
     {
         return GridViewHelper::htmlOptionsToString($this->headerHtmlOptions);
     }
@@ -80,7 +122,7 @@ abstract class BaseColumn
      * @param array $context
      * @return string
      */
-    public function contentHtmlOptions(array $context) : string
+    public function compileContentHtmlOptions(array $context) : string
     {
         return GridViewHelper::htmlOptionsToString($this->contentHtmlOptions, $context);
     }
@@ -96,31 +138,17 @@ abstract class BaseColumn
      * Renders column content
      * @param $row
      * @return string
-     * @throws GridViewConfigException
      */
     public function renderValue($row)
     {
         $value = $this->_renderValue($row);
 
-        switch ($this->contentFormat) {
-            case 'raw':
-                return $value;
-
-            case 'text':
-                return htmlentities($value);
-
-            case 'url':
-                return '<a href="' . htmlspecialchars($value, ENT_QUOTES) . '">' . htmlentities($value) . '</a>';
-
-            case 'email':
-                return '<a href="mailto:' . htmlspecialchars($value, ENT_QUOTES) . '">' . htmlentities($value) . '</a>';
-
-            case 'image':
-                return '<img src="' . htmlspecialchars($value, ENT_QUOTES) . '">';
-
-            default:
-                throw new GridViewConfigException('Invalid content format for attribute collumn: ' . $this->value);
+        foreach ($this->formatters as $formatter) {
+            $className = GridViewHelper::resolveAlias('formatter', $formatter);
+            $value = (new $className)->format($value);
         }
+
+        return $value;
     }
 
 }

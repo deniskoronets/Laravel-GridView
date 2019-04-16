@@ -2,9 +2,20 @@
 
 namespace Woo\GridView;
 
+use Woo\GridView\Columns\Actions\DeleteAction;
+use Woo\GridView\Columns\Actions\EditAction;
+use Woo\GridView\Columns\Actions\ShowAction;
 use Woo\GridView\Columns\ActionsColumn;
 use Woo\GridView\Columns\AttributeColumn;
-use Woo\GridView\Columns\RawColumn;
+use Woo\GridView\Columns\BladeColumn;
+use Woo\GridView\Columns\CallbackColumn;
+use Woo\GridView\Columns\ViewColumn;
+use Woo\GridView\Filters\DropdownFilter;
+use Woo\GridView\Filters\TextFilter;
+use Woo\GridView\Formatters\EmailFormatter;
+use Woo\GridView\Formatters\ImageFormatter;
+use Woo\GridView\Formatters\TextFormatter;
+use Woo\GridView\Formatters\UrlFormatter;
 use Woo\GridView\Renderers\DefaultRenderer;
 
 class GridViewHelper
@@ -16,15 +27,45 @@ class GridViewHelper
     private static $aliases = [
         'column' => [
             'attribute' => AttributeColumn::class,
-            'raw' => RawColumn::class,
+            'raw' => CallbackColumn::class,
+            'callback' => CallbackColumn::class,
             'actions' => ActionsColumn::class,
+            'view' => ViewColumn::class,
+        ],
+        'formatter' => [
+            'email' => EmailFormatter::class,
+            'image' => ImageFormatter::class,
+            'text' => TextFormatter::class,
+            'url' => UrlFormatter::class,
+        ],
+        'filter' => [
+            'text' => TextFilter::class,
+            'dropdown' => DropdownFilter::class,
         ],
         'renderer' => [
             'default' => DefaultRenderer::class,
+        ],
+        'action' => [
+            'delete' => DeleteAction::class,
+            'update' => EditAction::class,
+            'edit' => EditAction::class,
+            'show' => ShowAction::class,
+            'view' => ShowAction::class,
         ]
     ];
 
     private function __construct() {}
+
+    /**
+     * Useful in case you want to register a new alias for your project
+     * @param string $context
+     * @param string $alias
+     * @param string $aliasTo
+     */
+    public static function registerAlias(string $context, string $alias, string $aliasTo)
+    {
+        self::$aliases[$context][$alias] = $aliasTo;
+    }
 
     /**
      * Allows to resolve class name by its alias
@@ -61,5 +102,50 @@ class GridViewHelper
         }
 
         return implode(' ', $out);
+    }
+
+    /**
+     * Allows to make column title by it key or attribute name
+     * @param string|int $key
+     * @return string
+     */
+    public static function columnTitle($key) : string
+    {
+        if (is_numeric($key)) {
+            return 'Column';
+        }
+
+        return ucwords(
+            trim(
+                preg_replace_callback(
+                    '/([A-Z]|_|\.)/',
+                    function($word) {
+                        $word = $word[0];
+
+                        if ($word == '_' || $word == '.') {
+                            return ' ';
+                        }
+
+                        return ' ' . strtolower($word);
+                    },
+                    $key
+                )
+            )
+        );
+    }
+
+    /**
+     * Helper for internal purposes
+     * @param $id
+     * @param $component
+     * @return string
+     */
+    public static function gridIdFormatter($id, $component)
+    {
+        if ($id == 0) {
+            return $component;
+        }
+
+        return 'grid[' . $id . '][' . $component . ']';
     }
 }
