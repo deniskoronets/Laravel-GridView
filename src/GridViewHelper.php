@@ -2,6 +2,9 @@
 
 namespace Woo\GridView;
 
+use Woo\GridView\Columns\Actions\DeleteAction;
+use Woo\GridView\Columns\Actions\EditAction;
+use Woo\GridView\Columns\Actions\ShowAction;
 use Woo\GridView\Columns\ActionsColumn;
 use Woo\GridView\Columns\AttributeColumn;
 use Woo\GridView\Columns\BladeColumn;
@@ -41,6 +44,13 @@ class GridViewHelper
         ],
         'renderer' => [
             'default' => DefaultRenderer::class,
+        ],
+        'action' => [
+            'delete' => DeleteAction::class,
+            'update' => EditAction::class,
+            'edit' => EditAction::class,
+            'show' => ShowAction::class,
+            'view' => ShowAction::class,
         ]
     ];
 

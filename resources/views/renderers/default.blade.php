@@ -17,9 +17,9 @@
             <tr>
                 @foreach ($grid->columns as $column)
                     <th {!! $column->compileHeaderHtmlOptions() !!}>
-                        <a href="#" v-on:click="sort('{{ $column->value }}')">{{ $column->title }}</a>
+                        <a href="#" @if ($column->sortable) v-on:click="sort('{{ $column->value }}')" @endif>{{ $column->title }}</a>
 
-                        @if ($column instanceof \Woo\GridView\Columns\AttributeColumn)
+                        @if ($column->sortable)
                             @if ($grid->getRequest()->sortColumn == $column->value)
                                 <span class="sort-{{ strtolower($grid->getRequest()->sortOrder) }}"></span>
                             @endif
@@ -44,7 +44,9 @@
             @forelse ($grid->getPagination()->items() as $row)
                 <tr>
                     @foreach ($grid->columns as $column)
-                        <td {!! $column->compileContentHtmlOptions(['model' => $row]) !!}>{!! $column->renderValue($row) !!}</td>
+                        <td {!! $column->compileContentHtmlOptions(['model' => $row]) !!}>
+                            {!! $column->renderValue($row) !!}
+                        </td>
                     @endforeach
                 </tr>
             @empty

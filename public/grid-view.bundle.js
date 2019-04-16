@@ -94,6 +94,9 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Imports
+exports.push([module.i, "@import url(https://use.fontawesome.com/releases/v5.8.1/css/all.css);", ""]);
+
 // Module
 exports.push([module.i, ".sort-asc, .sort-desc {\n  display: inline-block;\n  width: 0;\n  height: 0;\n  margin-bottom: 5px; }\n  .sort-asc.sort-asc, .sort-desc.sort-asc {\n    border-left: 5px solid transparent;\n    border-right: 5px solid transparent;\n    border-bottom: 5px solid #007bff; }\n  .sort-asc.sort-desc, .sort-desc.sort-desc {\n    border-left: 5px solid transparent;\n    border-right: 5px solid transparent;\n    border-top: 5px solid #007bff; }\n", ""]);
 

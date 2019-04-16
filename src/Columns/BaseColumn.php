@@ -29,6 +29,11 @@ abstract class BaseColumn
     public $filter;
 
     /**
+     * @var boolean
+     */
+    public $sortable = true;
+
+    /**
      * @var array
      */
     public $headerHtmlOptions = [];
@@ -41,7 +46,7 @@ abstract class BaseColumn
     /**
      * @var array - allowed: raw, url, email, text, image
      */
-    public $formatters = [];
+    public $formatters = ['text'];
 
     /**
      * Value when column is empty
@@ -98,6 +103,7 @@ abstract class BaseColumn
             'contentHtmlOptions' => 'array',
             'formatters' => 'array',
             'emptyValue' => 'string',
+            'sortable' => 'bool',
             'filter' => BaseFilter::class . '|null',
         ];
     }

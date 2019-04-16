@@ -14,9 +14,14 @@ class ActionsColumn extends BaseColumn
 
     /**
      * Value contains short codes for actions
-     * @var string
+     * @var array
      */
     public $value = [];
+
+    /**
+     * @var bool
+     */
+    public $sortable = false;
 
     /**
      * @var string
@@ -24,41 +29,51 @@ class ActionsColumn extends BaseColumn
     public $formatters = [];
 
     /**
-     * @return array
+     * @var string
      */
-    protected function configTests(): array
+    public $delimiter = ' ';
+
+    /**
+     * @var null
+     */
+    public $filter = null;
+
+    public function __construct(array $config)
     {
-        return array_merge(parent::configTests(), [
-            'value' => 'string',
-            'additionalActions' => 'array',
-            'actionsUrls' => 'any',
-        ]);
+        parent::__construct($config);
+        $this->buildActions();
+    }
+
+    protected function buildActions()
+    {
+        foreach ($this->value as &$action) {
+            if (is_object($action)) {
+                continue;
+            }
+
+            if (is_string($action)) {
+                $tmp = explode(':', $action);
+
+                $action = [
+                    'class' => array_shift($tmp),
+                    'args' => $tmp,
+                ];
+            }
+
+            $className = GridViewHelper::resolveAlias('action', $action['class']);
+            $action = new $className(...$action['args']);
+        }
     }
 
     /**
      * @return array
      */
-    public function basicActions()
+    protected function configTests(): array
     {
-        return [
-            'show' => function($model) {
-                return '<a href="' . call_user_func($this->actionsUrls, $model)['show'] . '">View</a>';
-            },
-            'edit' => function($model) {
-                return '<a href="' . call_user_func($this->actionsUrls, $model)['edit'] . '">Edit</a>';
-            },
-            'delete' => function($model) {
-                return '
-                    <form action="' . call_user_func($this->actionsUrls, $model)['delete'] . '" method="post" class="deleteForm">
-                        <input type="hidden" name="_token" value="' . csrf_token() . '">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button class="deleteButton" href="' . call_user_func($this->actionsUrls, $model)['delete'] . '"
-                            onclick="if(!confirm(\'Are you sure want to delete this item?\')) return false;"
-                        >Delete</button>
-                    </form>
-                ';
-            },
-        ];
+        return array_merge(parent::configTests(), [
+            'value' => 'array',
+            'delimiter' => 'string',
+        ]);
     }
 
     /**
@@ -66,18 +81,12 @@ class ActionsColumn extends BaseColumn
      */
     public function _renderValue($row)
     {
-        $result = $this->value;
+        $result = [];
 
-        $actions = array_merge($this->basicActions(), $this->additionalActions);
-
-        foreach ($actions as $key => $action) {
-            if (strpos($result, '{' . $key . '}') === false) {
-                continue;
-            }
-
-            $result = str_replace('{' . $key . '}', $action($row), $result);
+        foreach ($this->value as $action) {
+            $result[] = $action->render($row);
         }
 
-        return $result;
+        return implode($this->delimiter, $result);
     }
 }

@@ -183,7 +183,7 @@ class GridView
             /**
              * Inline column declaration detector
              */
-            if (strpos($columnOptions['value'], 'view:') === 0) {
+            if (is_string($columnOptions['value']) && strpos($columnOptions['value'], 'view:') === 0) {
                 $columnOptions['class'] = 'view';
                 $columnOptions['value'] = str_replace('view:', '', $columnOptions['value']);
             }
