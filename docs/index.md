@@ -4,16 +4,22 @@
     <img src="./screen.png">
 </p>
 
-Completely reused, rebuild and refactored gridview for laravel!
+Cool and fully charged data table rendered for laravel.
+
+## Versions Policy
+By looking on experience from v.1.x I decided to make minor versions backwardly compatible, 
+which means that v.2.0 could be replaced with 2.3 or 2.5 with no breaks. 
+But the same doesnt work for major versions, for example changing 2.1 to 3.1 doesn't work and there's no guarantee that it'll work.
+Please be careful in picking right version in your composer.json. Do not specify wildcard (*) or ^ because it'll break your tables at some point.  
 
 ## Installation
 ```
-composer require woo/laravel-grid-view ^2.0
+composer require woo/laravel-grid-view 2.*
 ``` 
 
 or add into `composer.json`:
 ```
-"woo/laravel-grid-view": "^2.0"
+"woo/laravel-grid-view": "2.*"
 ```
 
 *In case you use Laravel 5.4 or lower, please add:*

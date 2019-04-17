@@ -44,5 +44,13 @@ but you may disable it by configuring grid view with an extra option:
 ]
 ```
 
-Also, in case you want to disable 
+Also, in case you want to disable filters, configure GridView with such option:
+```
+'showFilters' => false,
+```
+
+Column by default is AttributeColumn which renders an attribute from object/array. 
+Dots notation (key.subkey) is also available.
+
+In class section you may specify alias (see <a href="aliases">Aliases</a> reference).
 
