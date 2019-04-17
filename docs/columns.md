@@ -17,3 +17,4 @@ Columns are the basic item of GridView. You may set column by a bunch of ways:
 | contentHtmlOptions| []                        | A (k => v) list of options for `<td>`, Closure is valid with a single argument (current row) |
 | formatters        | []                        | A list of formatters to apply to current column (applied sequently) |
 | emptyValue        | string                    | Value which replaces empty column values |
+
