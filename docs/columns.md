@@ -13,8 +13,8 @@ Columns are the basic item of GridView. You may set column by a bunch of ways:
 | value             | mixed                     | Value is column-type-specific, please dig into particular column class for reference |
 | filter            | BaseFilter,null,[],string | Either configuration array, null or string with filter alias/class are valid |
 | sortable          | bool                      | Mark column as sortable (works mainly for attribute column) |
-| headerHtmlOptions | []                        | A (k => v) list of options for `<th>`. Closure is valid as a value |
-| contentHtmlOptions| []                        | A (k => v) list of options for `<td>`, Closure is valid with a single argument (current row) |
+| headerHtmlOptions | []                        | A (k => v) list of options for `th`. Closure is valid as a value |
+| contentHtmlOptions| []                        | A (k => v) list of options for `td`, Closure is valid with a single argument (current row) |
 | formatters        | []                        | A list of formatters to apply to current column (applied sequently) |
 | emptyValue        | string                    | Value which replaces empty column values |
 
