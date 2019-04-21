@@ -29,7 +29,7 @@ class ArrayDataProvider extends BaseDataProvider
         $tmp = collect($this->data);
 
         if (!empty($request->filters)) {
-            $tmp->filter(function($item) use ($request) {
+            $tmp = $tmp->filter(function($item) use ($request) {
                 foreach ($request->filters as $filterKey => $filterValue) {
 
                     if (!isset($item[$filterKey])) {
@@ -48,11 +48,12 @@ class ArrayDataProvider extends BaseDataProvider
         if (!empty($request->sortColumn)) {
             $tmp = $tmp->sortBy(
                 $request->sortColumn,
-                $request->sortOrder == 'DESC' ? SORT_DESC : SORT_ASC
+                SORT_REGULAR,
+                $request->sortOrder == 'DESC'
             );
         }
 
-        return $tmp;
+        return $tmp->values()->all();
     }
 
     /**
@@ -68,8 +69,10 @@ class ArrayDataProvider extends BaseDataProvider
      */
     public function getData(GridViewRequest $request)
     {
+        $tmp = $this->processData($request);
+
         return array_splice(
-            $this->processData($request),
+            $tmp,
             ($request->page -1) * $request->perPage, $request->perPage
         );
     }
