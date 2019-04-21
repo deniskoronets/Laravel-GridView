@@ -120,15 +120,11 @@ class GridView
         $this->buildColumns();
 
         $this->request = GridViewRequest::parse($this->id);
+        $this->request->perPage = $this->rowsPerPage;
 
         $this->pagination = new LengthAwarePaginator(
-            $this->dataProvider->getData(
-                $this->request->filters,
-                $this->request->sortColumn ?? '',
-                $this->request->sortOrder ?? 'DESC',
-                $this->request->page, $this->rowsPerPage
-            ),
-            $this->dataProvider->getCount(),
+            $this->dataProvider->getData($this->request),
+            $this->dataProvider->getCount($this->request),
             $this->rowsPerPage,
             $this->request->page
         );

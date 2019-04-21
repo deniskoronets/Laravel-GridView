@@ -2,6 +2,8 @@
 
 namespace Woo\GridView\DataProviders;
 
+use Woo\GridView\GridViewRequest;
+
 class ArrayDataProvider extends BaseDataProvider
 {
     /**
@@ -15,19 +17,60 @@ class ArrayDataProvider extends BaseDataProvider
     }
 
     /**
-     * Should return total amount of rows
-     * @return int
+     * @param GridViewRequest $request
+     * @return array
      */
-    public function getCount() : int
+    protected function processData(GridViewRequest $request) : array
     {
-        return count($this->data);
+        if (empty($this->data)) {
+            return [];
+        }
+
+        $tmp = collect($this->data);
+
+        if (!empty($request->filters)) {
+            $tmp->filter(function($item) use ($request) {
+                foreach ($request->filters as $filterKey => $filterValue) {
+
+                    if (!isset($item[$filterKey])) {
+                        return false;
+                    }
+
+                    if (strpos($item[$filterKey], $filterValue) === false) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+        }
+
+        if (!empty($request->sortColumn)) {
+            $tmp = $tmp->sortBy(
+                $request->sortColumn,
+                $request->sortOrder == 'DESC' ? SORT_DESC : SORT_ASC
+            );
+        }
+
+        return $tmp;
     }
 
     /**
      * @inheritdoc
      */
-    public function getData(array $filters, string $orderBy, string $orderSort, int $page, int $perPage)
+    public function getCount(GridViewRequest $request) : int
     {
-        return array_splice($this->data, ($page -1) * $perPage, $perPage);
+        return count($this->processData($request));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getData(GridViewRequest $request)
+    {
+        return array_splice(
+            $this->processData($request),
+            ($request->page -1) * $request->perPage, $request->perPage
+        );
     }
 }

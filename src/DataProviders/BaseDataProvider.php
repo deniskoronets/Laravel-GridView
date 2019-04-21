@@ -2,35 +2,21 @@
 
 namespace Woo\GridView\DataProviders;
 
+use Woo\GridView\GridViewRequest;
+
 abstract class BaseDataProvider
 {
     /**
      * Should return total amount of rows
+     * @param GridViewRequest $request
      * @return int
      */
-    abstract public function getCount() : int;
+    abstract public function getCount(GridViewRequest $request) : int;
 
     /**
      * Should return a list of data for current page
-     * @param array $filters
-     * @param string $orderBy
-     * @param string $orderSort
-     * @param int $page
-     * @param int $perPage - amount of records per page
+     * @param GridViewRequest $request
      * @return mixed
      */
-    abstract public function getData(array $filters, string $orderBy, string $orderSort, int $page, int $perPage);
-
-    /**
-     * Allows to get amount of found pages
-     */
-    public function getTotalPages(int $perPage): int
-    {
-        if ($perPage == 0) {
-            return 1;
-        }
-
-        return ceil($this->getCount() / $perPage);
-    }
-
+    abstract public function getData(GridViewRequest $request);
 }

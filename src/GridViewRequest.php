@@ -15,11 +15,18 @@ class GridViewRequest
 
     public $sortOrder;
 
+    public $perPage;
+
     public $filters = [];
 
     private function __construct($config)
     {
         $this->loadConfig($config);
+    }
+
+    private static function gridField(int $gridId, string $field)
+    {
+        return $gridId == 0 ? $field : 'grid.' . $gridId . '.' . $field;
     }
 
     /**
@@ -31,11 +38,32 @@ class GridViewRequest
     {
         $request = Request::instance();
 
+        $page = $request->input(self::gridField($gridId, 'page'), 1);
+        $sortColumn = $request->input(self::gridField($gridId, 'sort'), '');
+        $sortOrder = $request->input(self::gridField($gridId, 'order'), 'DESC');
+        $filters = $request->input(self::gridField($gridId, 'filters'), []);
+
+        if ($page <= 0) {
+            $page = 1;
+        }
+
+        if (!is_string($sortColumn)) {
+            $sortColumn = '';
+        }
+
+        if (!in_array($sortOrder, ['ASC', 'DESC'])) {
+            $sortOrder = 'DESC';
+        }
+
+        if (!is_array($filters)) {
+            $filters = [];
+        }
+
         return new GridViewRequest([
-            'page' => (int)$request->input($gridId == 0 ? 'page' : 'grid.' . $gridId . '.page', 1),
-            'sortColumn' => $request->input($gridId == 0 ? 'sort' : 'grid.' . $gridId . '.sort'),
-            'sortOrder' => $request->input($gridId == 0 ? 'order' : 'grid.' . $gridId . '.order'),
-            'filters' => $request->input($gridId == 0 ? 'filters' : 'grid.' . $gridId . '.filters', []),
+            'page' => $page,
+            'sortColumn' => $sortColumn,
+            'sortOrder' => $sortOrder,
+            'filters' => $filters,
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace Woo\GridView\DataProviders;
 
 use Illuminate\Database\Eloquent\Builder;
+use Woo\GridView\GridViewRequest;
 
 class EloquentDataProvider extends BaseDataProvider
 {
@@ -18,32 +19,45 @@ class EloquentDataProvider extends BaseDataProvider
     }
 
     /**
-     * @inheritdoc
+     * @param GridViewRequest $request
+     * @return Builder
      */
-    public function getCount(): int
+    protected function baseQuery(GridViewRequest $request)
     {
-        return $this->query->count();
+        $query = clone $this->query;
+
+        foreach ($request->filters as $field => $value) {
+            $query->where($field, 'LIKE', '%' . $value . '%');
+        }
+
+        if ($request->sortColumn) {
+            $query->orderBy($request->sortColumn, $request->sortOrder);
+        }
+
+        return $query;
     }
 
     /**
      * @inheritdoc
      */
-    public function getData(array $filters, string $orderBy, string $orderSort, int $page, int $perPage)
+    public function getCount(GridViewRequest $request) : int
     {
-        $query = clone $this->query;
+        return $this->baseQuery($request)->count();
+    }
 
-        foreach ($filters as $field => $value) {
-            $query->where($field, 'LIKE', '%' . $value . '%');
-        }
+    /**
+     * @inheritdoc
+     */
+    public function getData(GridViewRequest $request)
+    {
+        $query = $this->baseQuery($request);
 
-        if ($orderBy) {
-            $query->orderBy($orderBy, $orderSort);
-        }
-
-        if ($perPage == 0) {
+        if ($request->perPage == 0) {
             return $query->get();
         }
 
-        return $query->offset(($page - 1) * $perPage)->limit($perPage)->get();
+        return $query->offset(($request->page - 1) * $request->perPage)
+            ->limit($request->perPage)
+            ->get();
     }
 }
