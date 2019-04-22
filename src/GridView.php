@@ -200,22 +200,34 @@ class GridView
         return $this->renderer->render($this);
     }
 
+    /**
+     * @return LengthAwarePaginator|Paginator
+     */
     public function getPagination()
     {
         return $this->pagination;
     }
 
+    /**
+     * @return GridViewRequest
+     */
     public function getRequest()
     {
         return $this->request;
     }
 
-    public function getId()
+    /**
+     * @return int
+     */
+    public function getId() : int
     {
         return $this->id;
     }
 
-    public function compileTableHtmlOptions()
+    /**
+     * @return string
+     */
+    public function compileTableHtmlOptions() : string
     {
         return GridViewHelper::htmlOptionsToString($this->tableHtmlOptions);
     }
