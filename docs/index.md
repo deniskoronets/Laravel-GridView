@@ -4,7 +4,7 @@
     <img src="./screen.png">
 </p>
 
-Cool and fully charged data table rendered for laravel.
+Cool and fully charged data table rendered for laravel 5+.
 
 ## Versions Policy
 By looking on experience from v.1.x I decided to make minor versions backwardly compatible, 
@@ -22,9 +22,8 @@ or add into `composer.json`:
 "woo/laravel-grid-view": "2.*"
 ```
 
-*In case you use Laravel 5.4 or lower, please add:*
-- `Woo\GridView\GridViewServiceProvider::class` into `config/app.php`
-- Run `php artisan vendor:publish --tag=public --force`
+In case you use Laravel 5.4 or lower, please add 
+`Woo\GridView\GridViewServiceProvider::class` into `config/app.php`
 
 Otherwise, Laravel autodiscover will load all needed stuff after composer install the package.
 

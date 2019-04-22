@@ -28,7 +28,7 @@ class GridViewServiceProvider extends ServiceProvider
         ], 'public');
 
         if (!File::isDirectory(public_path('vendor/grid-view'))) {
-            Artisan::call('vendor:publish', ['--tag' => 'public', '--force']);
+            Artisan::call('vendor:publish', ['--tag' => 'public', '--force' => '']);
         }
 	}
 

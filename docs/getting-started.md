@@ -32,6 +32,14 @@ Once you've completed with installation, you need to do 2 things:
 ])
 ```
 
+or
+
+```blade
+{!! grid([
+    ...
+]) !!}
+```
+
 In this example, you can see data provider is passed to GridView with some extra configuration.
 You can see the whole configuration by <a href="grid-view-configuring">link</a>.
 
