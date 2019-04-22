@@ -14,7 +14,7 @@ Please be careful in picking right version in your composer.json. Do not specify
 
 ## Installation
 ```
-composer require woo/laravel-grid-view 2.*
+composer require woo/laravel-grid-view "2.*"
 ``` 
 
 or add into `composer.json`:
