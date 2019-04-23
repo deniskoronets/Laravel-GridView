@@ -6,13 +6,24 @@ Once you've completed with installation, you need to do 2 things:
 
 ```blade
 @grid([
-    'dataProvider' => $provider,
+    'dataProvider' => $provider, // see info about DataProviders
+    'rowsPerPage' => 20,
+    'columnOptions' => [ // you may specify options common for all columns in your grid
+        'class' => 'attribute',
+        'formatters' => 'text', 
+    ],
     'columns' => [
-        'Host',
-        'User',
+        'assigned.id', // dots notation is allowed
+        'username', // passing a string by default casts to AttributeCollumn
         [
-            'value' => 'Execute_priv',
-            'filter' => [
+            // class will be copied from GridView's columnOptions property
+            'value' => 'avatar',
+            'formatters' => ['image'], // formatters are available for all column types.
+        ],
+        'view:columns.some-dummy-view', // path to blade template
+        [
+            'value' => 'is_active',
+            'filter' => [ // by default, TextFilter is used, but you may override with any other
                 'class' => 'dropdown',
                 'items' => [
                     'Y' => 'Yes',
@@ -21,11 +32,18 @@ Once you've completed with installation, you need to do 2 things:
             ]
         ],
         [
-            'class' => 'actions',
+            'class' => 'callback', // its recommended to use view instead of passing a callback, but still its available
+            'value' => function($row) { 
+                return $row->status; 
+            }
+        ],
+        [
+            'class' => 'actions', // class option allows to change column class
             'value' => [
-                'edit:/path/to/{Host}',
-                'view:/path/{Host}',
-                'delete:/path/to/{Host}',
+                'edit:/path/to/{id}', // {id} - will be replaced with an attribute from row
+                'view:/path/{id}',
+                'delete:/path/to/{id}',
+                new \Woo\GridView\Columns\Actions\Action('copy/{id}', '<i class="fa fa-copy"></i>'),
             ]
         ]
     ],
