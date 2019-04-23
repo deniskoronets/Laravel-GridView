@@ -2,6 +2,7 @@
 
 namespace Woo\GridView;
 
+use Woo\GridView\Columns\Actions\Action;
 use Woo\GridView\Columns\Actions\DeleteAction;
 use Woo\GridView\Columns\Actions\EditAction;
 use Woo\GridView\Columns\Actions\ShowAction;
@@ -51,6 +52,7 @@ class GridViewHelper
             'edit' => EditAction::class,
             'show' => ShowAction::class,
             'view' => ShowAction::class,
+            'action' => Action::class,
         ]
     ];
 
