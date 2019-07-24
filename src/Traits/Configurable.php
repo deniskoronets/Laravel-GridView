@@ -80,7 +80,7 @@ trait Configurable
 
                     default:
                         $testPassed = $testPassed || is_a($this->$property, $test) || is_subclass_of($this->$property, $test);
-                        $testMessage = 'Property should be ' . $test . ' instance/class reference, got ' . print_r($this->$property, 1);
+                        $testMessage = 'Property should be ' . $test . ' instance/class reference, check ' . $property;
                 }
             }
 
