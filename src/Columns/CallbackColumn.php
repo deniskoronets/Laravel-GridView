@@ -10,6 +10,11 @@ class CallbackColumn extends BaseColumn
     public $formatters = ['raw'];
 
     /**
+     * @var bool
+     */
+    public $sortable = false;
+
+    /**
      * @return array
      */
     protected function configTests(): array

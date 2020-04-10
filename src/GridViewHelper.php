@@ -15,6 +15,7 @@ use Woo\GridView\Filters\DropdownFilter;
 use Woo\GridView\Filters\TextFilter;
 use Woo\GridView\Formatters\EmailFormatter;
 use Woo\GridView\Formatters\ImageFormatter;
+use Woo\GridView\Formatters\RawFormatter;
 use Woo\GridView\Formatters\TextFormatter;
 use Woo\GridView\Formatters\UrlFormatter;
 use Woo\GridView\Renderers\DefaultRenderer;
@@ -38,6 +39,7 @@ class GridViewHelper
             'image' => ImageFormatter::class,
             'text' => TextFormatter::class,
             'url' => UrlFormatter::class,
+            'raw' => RawFormatter::class,
         ],
         'filter' => [
             'text' => TextFilter::class,

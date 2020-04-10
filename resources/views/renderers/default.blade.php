@@ -17,7 +17,7 @@
             <tr>
                 @foreach ($grid->columns as $column)
                     <th {!! $column->compileHeaderHtmlOptions() !!}>
-                        <a href="#" @if ($column->sortable) v-on:click="sort('{{ $column->value }}')" @endif>{{ $column->title }}</a>
+                        <a href="#" @if ($column->sortable && is_scalar($column->value)) v-on:click="sort('{{ $column->value }}')" @endif>{{ $column->title }}</a>
 
                         @if ($column->sortable)
                             @if ($grid->getRequest()->sortColumn == $column->value)
