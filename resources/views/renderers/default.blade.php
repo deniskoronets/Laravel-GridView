@@ -8,7 +8,7 @@
     <grid-view
         inline-template
         id="grid-{{ $grid->getId() }}"
-        :originFilters='@json($filters)'
+        :origin-filters='@json($filters)'
         sort-column="{{ $grid->getRequest()->sortColumn }}"
         sort-order="{{ $grid->getRequest()->sortOrder }}"
     >
