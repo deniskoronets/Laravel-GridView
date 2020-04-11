@@ -98,12 +98,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     id: String,
-    filters: Object,
+    originFilters: Object,
     sortColumn: String,
     sortOrder: String
   },
   data: function data() {
     return {
+      filters: Object.assign({}, this.originFilters),
       sortDesc: this.sortOrder === 'DESC',
       filterTimeout: null
     };
