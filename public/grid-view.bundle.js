@@ -104,7 +104,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      sortDesc: this.sortOrder === 'DESC'
+      sortDesc: this.sortOrder === 'DESC',
+      filterTimeout: null
     };
   },
   methods: {
@@ -120,11 +121,11 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      if (filterTimeout) {
-        clearTimeout(filterTimeout);
+      if (this.filterTimeout) {
+        clearTimeout(this.filterTimeout);
       }
 
-      filterTimeout = setTimeout(function () {
+      this.filterTimeout = setTimeout(function () {
         _this.sendForm();
       }, 1000);
     },
@@ -13495,8 +13496,6 @@ var WooGridView = /*#__PURE__*/function () {
   _createClass(WooGridView, [{
     key: "initVue",
     value: function initVue() {
-      var filterTimeout = null;
-      var self = this;
       new vue__WEBPACK_IMPORTED_MODULE_0__["default"]({
         el: this.selector,
         runtimeCompiler: false,

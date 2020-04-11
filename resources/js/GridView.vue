@@ -10,6 +10,7 @@
         data() {
             return {
                 sortDesc: this.sortOrder === 'DESC',
+                filterTimeout: null,
             }
         },
 
@@ -23,11 +24,11 @@
                     return;
                 }
 
-                if (filterTimeout) {
-                    clearTimeout(filterTimeout);
+                if (this.filterTimeout) {
+                    clearTimeout(this.filterTimeout);
                 }
 
-                filterTimeout = setTimeout(() => {
+                this.filterTimeout = setTimeout(() => {
                     this.sendForm();
                 }, 1000);
             },

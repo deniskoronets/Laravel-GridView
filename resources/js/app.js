@@ -10,9 +10,6 @@ class WooGridView {
     }
 
     initVue() {
-        let filterTimeout = null;
-        const self = this;
-
         new Vue({
             el: this.selector,
             runtimeCompiler: false,
