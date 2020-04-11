@@ -1,5 +1,5 @@
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const path = require('path');
-var webpack = require('webpack');
 
 module.exports = {
     entry: './resources/js/app.js',
@@ -39,6 +39,9 @@ module.exports = {
             },
         ]
     },
+    plugins: [
+        new VueLoaderPlugin()
+    ],
     stats: {
         colors: true
     },
