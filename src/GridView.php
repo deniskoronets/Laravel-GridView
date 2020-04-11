@@ -82,6 +82,12 @@ class GridView
     public $showFilters = true;
 
     /**
+     * Flags allow to change standalone vue to. If false, GridView component should be included in your root Vue instance
+     * @var bool
+     */
+    public $standaloneVue = true;
+
+    /**
      * @var Paginator
      */
     protected $pagination;

@@ -3,7 +3,7 @@
     * @var \Woo\GridView\GridView $grid
     **/
 @endphp
-<form class="grid-form" action="" method="GET" style="display: none;">
+<form class="grid-form" action="" method="GET" style="display: none;" ref="gridForm">
     <input type="hidden" name="{{ $grid->getId() == 0 ? 'sort' : 'grid[' . $grid->getId() . '][sort]' }}" :value="sortColumn">
     <input type="hidden" name="{{ $grid->getId() == 0 ? 'order' : 'grid[' . $grid->getId() . '][order]' }}" :value="sortDesc ? 'DESC' : 'ASC'">
 

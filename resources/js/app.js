@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import GridView from "../js/GridView";
 
 class WooGridView {
 
@@ -6,8 +7,6 @@ class WooGridView {
         this.selector = selector;
         this.container = document.querySelector(selector);
         this.initVue();
-
-        require('../scss/grid.scss');
     }
 
     initVue() {
@@ -17,48 +16,10 @@ class WooGridView {
         new Vue({
             el: this.selector,
             runtimeCompiler: false,
-
-            data() {
-                return {
-                    filters: JSON.parse(self.container.dataset.filters),
-                    sortColumn: self.container.dataset.sortColumn,
-                    sortDesc: self.container.dataset.sortOrder === 'DESC',
-                }
-            },
-
-            methods: {
-                filter(skipDelay = false) {
-
-                    if (skipDelay) {
-                        this.$nextTick(() => {
-                            self.sendForm();
-                        });
-                        return;
-                    }
-
-                    if (filterTimeout) {
-                        clearTimeout(filterTimeout);
-                    }
-
-                    filterTimeout = setTimeout(() => {
-                        self.sendForm();
-                    }, 1000);
-                },
-
-                sort(column) {
-                    this.sortColumn = column;
-                    this.sortDesc = !this.sortDesc;
-
-                    this.$nextTick(() => {
-                        self.sendForm();
-                    });
-                }
+            components: {
+                GridView,
             }
         });
-    }
-
-    sendForm() {
-        document.querySelector(this.selector + ' .grid-form').submit();
     }
 }
 
