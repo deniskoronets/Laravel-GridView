@@ -2,13 +2,14 @@
     export default {
         props: {
             id: String,
-            filters: Object,
+            originFilters: Object,
             sortColumn: String,
             sortOrder: String
         },
 
         data() {
             return {
+                filters: this.originFilters,
                 sortDesc: this.sortOrder === 'DESC',
                 filterTimeout: null,
             }
