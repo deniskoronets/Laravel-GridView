@@ -2,6 +2,7 @@
 
 namespace Woo\GridView;
 
+use Illuminate\Support\Arr;
 use Woo\GridView\Columns\Actions\Action;
 use Woo\GridView\Columns\Actions\DeleteAction;
 use Woo\GridView\Columns\Actions\EditAction;
@@ -151,5 +152,15 @@ class GridViewHelper
         }
 
         return 'grid[' . $id . '][' . $component . ']';
+    }
+
+    /**
+     * Generates page url with all requested params from request
+     * @param $gridId
+     * @param $page
+     */
+    public static function pageUrl($gridId, $page)
+    {
+        return url()->current() . '?' . Arr::query([\Woo\GridView\GridViewHelper::gridIdFormatter($gridId, 'page') => $page] + request()->query());
     }
 }

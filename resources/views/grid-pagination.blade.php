@@ -11,7 +11,7 @@
         @if ($paginator->onFirstPage())
             <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
         @else
-            <li class="page-item"><a class="page-link" href="?{{ urlencode(\Woo\GridView\GridViewHelper::gridIdFormatter($gridId, 'page')) }}={{ $paginator->currentPage() - 1 }}" rel="prev">&laquo;</a></li>
+            <li class="page-item"><a class="page-link" href="{{ \Woo\GridView\GridViewHelper::pageUrl($gridId, $paginator->currentPage() - 1) }}" rel="prev">&laquo;</a></li>
         @endif
 
         {{-- Pagination Elements --}}
@@ -27,7 +27,7 @@
                     @if ($page == $paginator->currentPage())
                         <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
                     @else
-                        <li class="page-item"><a class="page-link" href="?{{ urlencode(\Woo\GridView\GridViewHelper::gridIdFormatter($gridId, 'page')) }}={{ $page }}">{{ $page }}</a></li>
+                        <li class="page-item"><a class="page-link" href="{{ \Woo\GridView\GridViewHelper::pageUrl($gridId, $page) }}">{{ $page }}</a></li>
                     @endif
                 @endforeach
             @endif
@@ -35,7 +35,7 @@
 
         {{-- Next Page Link --}}
         @if ($paginator->hasMorePages())
-            <li class="page-item"><a class="page-link" href="?{{ urlencode(\Woo\GridView\GridViewHelper::gridIdFormatter($gridId, 'page')) }}={{ $paginator->currentPage() + 1 }}" rel="next">&raquo;</a></li>
+            <li class="page-item"><a class="page-link" href="{{ \Woo\GridView\GridViewHelper::pageUrl($gridId, $paginator->currentPage() + 1) }}" rel="next">&raquo;</a></li>
         @else
             <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
         @endif
