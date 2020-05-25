@@ -22,8 +22,8 @@
                             <th {!! $column->compileHeaderHtmlOptions() !!}>
                                 <a href="#" @if ($column->getSortableName() !== false) v-on:click="sort('{{ $column->getSortableName() }}')" @endif>{{ $column->title }}</a>
 
-                                @if ($column->sortable)
-                                    @if ($grid->getRequest()->sortColumn == $column->value)
+                                @if ($column->getSortableName() !== false)
+                                    @if ($grid->getRequest()->sortColumn == $column->getSortableName())
                                         <span class="sort-{{ strtolower($grid->getRequest()->sortOrder) }}"></span>
                                     @endif
                                 @endif

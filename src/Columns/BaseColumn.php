@@ -75,7 +75,7 @@ abstract class BaseColumn
             return false;
         }
 
-        if (is_scalar($this->sortable)) {
+        if (!is_bool($this->sortable)) {
             return $this->sortable;
         }
 
