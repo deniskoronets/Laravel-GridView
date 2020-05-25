@@ -18,6 +18,7 @@ class EloquentDataProvider extends BaseDataProvider
         $this->query = clone $query;
     }
 
+
     /**
      * @param GridViewRequest $request
      * @return Builder

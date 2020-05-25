@@ -29,7 +29,7 @@ abstract class BaseColumn
     public $filter;
 
     /**
-     * @var boolean
+     * @var boolean|string
      */
     public $sortable = true;
 
@@ -64,6 +64,26 @@ abstract class BaseColumn
         $this->loadConfig($config);
 
         $this->buildFilter();
+    }
+
+    /**
+     * Allows to get sortable column's name
+     */
+    public function getSortableName()
+    {
+        if ($this->sortable === false) {
+            return false;
+        }
+
+        if (is_scalar($this->sortable)) {
+            return $this->sortable;
+        }
+
+        if (is_scalar($this->value)) {
+            return $this->value;
+        }
+
+        return false;
     }
 
     protected function buildFilter()
@@ -103,7 +123,7 @@ abstract class BaseColumn
             'contentHtmlOptions' => 'array',
             'formatters' => 'array',
             'emptyValue' => 'string',
-            'sortable' => 'bool',
+            'sortable' => 'any',
             'filter' => BaseFilter::class . '|null',
         ];
     }
