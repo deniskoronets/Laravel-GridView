@@ -88,6 +88,12 @@ class GridView
     public $standaloneVue = true;
 
     /**
+     * List of additinal params which'll be added to filter requests
+     * @var array
+     */
+    public $additionalRequestParams = [];
+
+    /**
      * @var Paginator
      */
     protected $pagination;

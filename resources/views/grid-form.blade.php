@@ -7,6 +7,10 @@
     <input type="hidden" name="{{ $grid->getId() == 0 ? 'sort' : 'grid[' . $grid->getId() . '][sort]' }}" :value="sortColumn">
     <input type="hidden" name="{{ $grid->getId() == 0 ? 'order' : 'grid[' . $grid->getId() . '][order]' }}" :value="sortDesc ? 'DESC' : 'ASC'">
 
+    @if (!empty($grid->additionalRequestParams))
+        @include('woo_gridview::_grid-form-additional-recursive', ['items' => $grid->additionalRequestParams, 'prefixKey' => ''])
+    @endif
+
     @if ($grid->showFilters)
         @foreach ($grid->columns as $column)
             @if ($column->filter)
