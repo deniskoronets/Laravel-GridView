@@ -8,8 +8,8 @@ use Woo\GridView\GridViewRequest;
 
 class EloquentDataProvider extends BaseDataProvider
 {
-    protected $filters = false;
-    protected $ordering = false;
+    protected $filters = true;
+    protected $ordering = true;
 
     protected $query;
 
