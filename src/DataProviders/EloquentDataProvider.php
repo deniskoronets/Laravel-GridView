@@ -71,7 +71,7 @@ class EloquentDataProvider extends BaseDataProvider
         }
 
         if ($request->sortColumn && ($this->ordering === true || in_array($request->sortColumn, $this->ordering))) {
-            $query->orderBy($request->sortColumn, $request->sortOrder);
+            $query->reorder($request->sortColumn, $request->sortOrder);
         }
 
         return $query;
