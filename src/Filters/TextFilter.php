@@ -11,6 +11,7 @@ class TextFilter extends BaseFilter
         return view('woo_gridview::filters.text-filter', [
             'name' => $this->name,
             'value' => $grid->getRequest()->filters[$this->name] ?? '',
+            'cssClass' => $this->cssClass,
         ]);
     }
 }

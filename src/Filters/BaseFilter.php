@@ -10,9 +10,13 @@ abstract class BaseFilter
     use Configurable;
 
     public $name;
+    public $cssClass = 'form-control';
 
     public function __construct(array $config)
     {
+        if (!empty($config['cssClass'])) {
+            $config['cssClass'] .= ' '.$this->cssClass;
+        }
         $this->loadConfig($config);
     }
 
