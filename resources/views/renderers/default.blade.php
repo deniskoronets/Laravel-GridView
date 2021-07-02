@@ -2,6 +2,9 @@
 /**
 * @var \Woo\GridView\GridView $grid
 **/
+    use Woo\GridView\GridView;$paginator = $grid->getPagination();
+    $thisStart = 1 + ($paginator->currentPage() - 1) * $paginator->perPage();
+    $thisEnd = $paginator->currentPage() * $paginator->perPage()
 @endphp
 
 <div class="grid-view-container">
@@ -14,7 +17,9 @@
     >
         <div>
             @include('woo_gridview::grid-form')
-
+            @if ($paginator->hasPages())
+                <div class="summary">Displaying {{$thisStart}}-{{$thisEnd}} of {{$paginator->total()}} results.</div>
+            @endif
             <table {!! $grid->compileTableHtmlOptions() !!}>
                 <thead>
                     <tr>
@@ -30,28 +35,27 @@
                             </th>
                         @endforeach
                     </tr>
-                </thead>
-                <tbody>
                     @if ($grid->showFilters)
                         <tr>
                             @foreach ($grid->columns as $column)
-                                <td>
+                                <th>
                                     @if ($column->filter)
-                                       {!! $column->filter->render($grid) !!}
+                                        {!! $column->filter->render($grid) !!}
                                     @endif
-                                </td>
+                                </th>
                             @endforeach
                         </tr>
                     @endif
-
-                    @forelse ($grid->getPagination()->items() as $row)
-                        <tr>
-                            @foreach ($grid->columns as $column)
-                                <td {!! $column->compileContentHtmlOptions(['model' => $row]) !!}>
-                                    {!! $column->renderValue($row) !!}
-                                </td>
-                            @endforeach
-                        </tr>
+                </thead>
+                <tbody>
+                @forelse ($grid->getPagination()->items() as $row)
+                    <tr>
+                        @foreach ($grid->columns as $column)
+                            <td {!! $column->compileContentHtmlOptions(['model' => $row]) !!}>
+                                {!! $column->renderValue($row) !!}
+                            </td>
+                        @endforeach
+                    </tr>
                     @empty
                         <tr>
                             <td colspan="{{ count($grid->columns) }}" class="text-center">
@@ -71,7 +75,7 @@
 </div>
 
 @if ($grid->standaloneVue)
-<script src="/vendor/grid-view/grid-view.bundle.js"></script>
+<script src="{{ asset('vendor/grid-view/grid-view.bundle.js')  }}"></script>
 <script>
     window.GridViewShared = @json([]);
     new WooGridView('#grid-{{ $grid->getId() }}');
