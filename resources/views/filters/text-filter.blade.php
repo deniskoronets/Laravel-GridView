@@ -1,5 +1,5 @@
 <input type="text"
-       class="form-control"
+       class="{{ $cssClass }}"
        value="{{ $value }}"
        name="filters[{{ $name }}]"
        v-model="filters['{{ $name }}']"
