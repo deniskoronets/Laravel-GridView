@@ -2,38 +2,54 @@
 
 namespace Woo\GridView;
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
+use Blade;
 use Illuminate\Support\ServiceProvider;
 
 class GridViewServiceProvider extends ServiceProvider
 {
-	/**
-	 * Perform post-registration booting of services.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-		$this->loadViewsFrom(__DIR__ . '/../resources/views', 'woo_gridview');
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->loadViews();
 
-		require_once __DIR__ . '/functions.php';
+        $this->publishViews();
+        $this->publishResources();
 
-        \Blade::directive('grid', function ($expression) {
+        $this->bootDirectives();
+    }
+
+    public function register()
+    {
+        //
+    }
+
+    private function loadViews()
+    {
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'woo_gridview');
+    }
+
+    private function publishViews()
+    {
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/woo_gridview'),
+        ], 'views');
+    }
+
+    private function publishResources()
+    {
+        $this->publishes([
+            __DIR__ . '/../public' => 'public/vendor/woo_gridview',
+        ], 'public');
+    }
+
+    private function bootDirectives()
+    {
+        Blade::directive('grid', function ($expression) {
             return "<?php echo grid($expression) ?>";
         });
-
-        $this->publishes([
-            __DIR__ . '/../public' => 'public/vendor/grid-view',
-        ], 'public');
-
-        if (!File::isDirectory(public_path('vendor/grid-view'))) {
-            Artisan::call('vendor:publish', ['--tag' => 'public', '--force' => '']);
-        }
-	}
-
-	public function register()
-	{
-		//
-	}
+    }
 }

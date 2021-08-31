@@ -75,7 +75,7 @@
 </div>
 
 @if ($grid->standaloneVue)
-<script src="{{ asset('vendor/grid-view/grid-view.bundle.js')  }}"></script>
+<script src="{{ asset('vendor/woo_gridview/grid-view.bundle.js')  }}"></script>
 <script>
     window.GridViewShared = @json([]);
     new WooGridView('#grid-{{ $grid->getId() }}');

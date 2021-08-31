@@ -3,7 +3,8 @@
     "description": "Yii2 gridview analog for laravel",
     "license": "BSD-3-Clause",
     "require": {
-        "php": "^7.0"
+        "php": "^7.0|^8.0",
+        "laravel/framework": "^7.0|^8.0"
     },
     "authors": [
         {
@@ -14,7 +15,10 @@
     "autoload": {
         "psr-4": {
             "Woo\\GridView\\": "src/"
-        }
+        },
+        "files": [
+            "functions.php"
+        ]
     },
     "extra": {
         "laravel": {
