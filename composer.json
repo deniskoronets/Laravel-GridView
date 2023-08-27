@@ -3,7 +3,7 @@
     "description": "Yii2 gridview analog for laravel",
     "license": "BSD-3-Clause",
     "require": {
-        "php": "^7.0"
+        "php": "^7.4 || ^8.0"
     },
     "authors": [
         {
