@@ -7,3 +7,5 @@
 
 ## Documentation v.1.x
 <a href='https://github.com/deniskoronets/Laravel-GridView/tree/e43732d2389e25fe486cfdc32c48367d2ef82f0e'>v.1 readme</a>
+
+(sponsored by: <a href="https://mobicard.com.ua/">mobicard</a>, <a href="https://busyb.com.ua/">busyb</a>)
