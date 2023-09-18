@@ -49,4 +49,4 @@ New features are:
 - GridViewHelper is now open for adding extra aliases on app boot (you can make it through )
 - **<!> Achtung! No complete backward compatibility with v1. Please update with your own risk! In general, Action column api is totally different now - it was totally rebuild.**
 
-<b>Made with ❤ by <a href="https://woo.zp.ua">denis</a></b>
+Developed by: <a href="https://mobicard.com.ua/">mobicard</a>, <a href="https://busyb.com.ua/">busyb</a>
