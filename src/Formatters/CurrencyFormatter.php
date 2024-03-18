@@ -2,7 +2,7 @@
 
 namespace Woo\GridView\Formatters;
 
-class CurrencyFormetter implements IFormatter
+class CurrencyFormatter implements IFormatter
 {
     public function format($value): string
     {
