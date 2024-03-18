@@ -22,3 +22,4 @@ A list of current formatters:
 - text (sanitize html and renders safe text)
 - url - formats as clickable url (not compatible with `text` formatter)
 - boolean - formats value as boolean (replaces true to "Yes", false to "No")
+- currency - formats value as currency (1,000.00 as ex)
