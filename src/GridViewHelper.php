@@ -20,6 +20,7 @@ use Woo\GridView\Formatters\RawFormatter;
 use Woo\GridView\Formatters\TextFormatter;
 use Woo\GridView\Formatters\UrlFormatter;
 use Woo\GridView\Formatters\CurrencyFormatter;
+use Woo\GridView\Formatters\NumberFormatter;
 use Woo\GridView\Renderers\DefaultRenderer;
 
 class GridViewHelper
@@ -43,6 +44,7 @@ class GridViewHelper
             'url' => UrlFormatter::class,
             'raw' => RawFormatter::class,
             'currency' => CurrencyFormatter::class,
+            'number' => NumberFormatter::class,
         ],
         'filter' => [
             'text' => TextFilter::class,
