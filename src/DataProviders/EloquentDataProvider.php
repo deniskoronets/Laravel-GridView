@@ -82,7 +82,10 @@ class EloquentDataProvider extends BaseDataProvider
      */
     public function getCount(GridViewRequest $request) : int
     {
-        return $this->baseQuery($request)->count();
+        $query = $this->baseQuery($request);
+        $query->reorder(null);
+
+        return $query->count();
     }
 
     /**
