@@ -25,10 +25,16 @@
                     <tr>
                         @foreach ($grid->columns as $column)
                             <th {!! $column->compileHeaderHtmlOptions() !!}>
-                                <a href="#" @if ($column->getSortableName() !== false) v-on:click="sort('{{ $column->getSortableName() }}')" @endif>{{ $column->title }}</a>
+                                @if ($column->getSortableName() !== false)
+                                    <a href="#" v-on:click="sort('{{ $column->getSortableName() }}')">
+                                        {{ $column->title }}
+                                    </a>
+                                @else
+                                    <span>{{ $column->title }}</span>
+                                @endif
 
-                                @if ($column->sortable)
-                                    @if ($grid->getRequest()->sortColumn == $column->value)
+                                @if ($column->getSortableName() !== false)
+                                    @if ($grid->getRequest()->sortColumn == $column->getSortableName())
                                         <span class="sort-{{ strtolower($grid->getRequest()->sortOrder) }}"></span>
                                     @endif
                                 @endif
