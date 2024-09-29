@@ -5,6 +5,7 @@ namespace Woo\GridView\DataProviders;
 use Illuminate\Database\Eloquent\Builder;
 use Woo\GridView\Exceptions\GridViewConfigException;
 use Woo\GridView\GridViewRequest;
+use Illuminate\Support\Facades\Schema;
 
 class EloquentDataProvider extends BaseDataProvider
 {
@@ -62,8 +63,14 @@ class EloquentDataProvider extends BaseDataProvider
         if ($this->filters !== false) {
             foreach ($request->filters as $field => $value) {
                 if ($this->filters === true || in_array($field, $this->filters)) {
-                    $query->where($field, 'LIKE', '%' . $value . '%');
-
+                    // Check if the $field is a real column in the table
+                    if (Schema::hasColumn($query->from, $field)) {
+                        // $field exists in the table, apply a WHERE clause
+                        $query->where($field, 'LIKE', '%' . $value . '%');
+                    } else {
+                        // $field does not exist in the table, it must be an alias, apply a HAVING clause
+                        $query->having($field, 'LIKE', '%' . $value . '%');
+                    }
                 } elseif (!empty($this->filters[$field])) {
                     $this->applyFilter($this->filters[$field], $field, $query, $value);
                 }
