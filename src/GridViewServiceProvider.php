@@ -5,6 +5,7 @@ namespace Woo\GridView;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
+use Woo\GridView\Middlewares\InjectGridJsMiddleware;
 
 class GridViewServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,8 @@ class GridViewServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
+        $this->app['router']->pushMiddlewareToGroup('web', InjectGridJsMiddleware::class);
+
 		$this->loadViewsFrom(__DIR__ . '/../resources/views', 'woo_gridview');
 
 		require_once __DIR__ . '/functions.php';

@@ -4,8 +4,9 @@
     **/
 @endphp
 <form class="grid-form" action="" method="GET" style="display: none;" ref="gridForm">
-    <input type="hidden" name="{{ $grid->getId() == 0 ? 'sort' : 'grid[' . $grid->getId() . '][sort]' }}" :value="sortColumn">
-    <input type="hidden" name="{{ $grid->getId() == 0 ? 'order' : 'grid[' . $grid->getId() . '][order]' }}" :value="sortDesc ? 'DESC' : 'ASC'">
+    <input type="submit" />
+    <input type="hidden" class="sort" name="{{ $grid->getId() == 0 ? 'sort' : 'grid[' . $grid->getId() . '][sort]' }}">
+    <input type="hidden" class="order" name="{{ $grid->getId() == 0 ? 'order' : 'grid[' . $grid->getId() . '][order]' }}">
 
     @if (!empty($grid->additionalRequestParams))
         @include('woo_gridview::_grid-form-additional-recursive', ['items' => $grid->additionalRequestParams, 'prefixKey' => ''])
@@ -16,8 +17,6 @@
             @if ($column->filter)
                 <input type="hidden"
                        name="{{ $grid->getId() == 0 ? 'filters' : 'grid[' . $grid->getId() . '][filters]' }}[{{ $column->filter->name }}]"
-                       :value="filters['{{ $column->filter->name }}']"
-                       v-if="filters['{{ $column->filter->name }}']"
                 >
             @endif
         @endforeach
