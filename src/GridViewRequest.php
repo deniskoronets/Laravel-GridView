@@ -26,7 +26,7 @@ class GridViewRequest
 
     private static function gridField(int $gridId, string $field)
     {
-        return $gridId == 0 ? $field : 'grid.' . $gridId . '.' . $field;
+        return 'grid.' . $gridId . '.' . $field;
     }
 
     /**

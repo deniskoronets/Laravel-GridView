@@ -1,5 +1,6 @@
 <input type="text"
-       class="{{ $cssClass }}"
+       class="{{ $cssClass }} filter-input"
        value="{{ $value }}"
-       name="filters[{{ $name }}]"
+       name="{{ $name }}"
+       onchange="gridViewFilter{{ $grid->getId() }}(event)"
 >

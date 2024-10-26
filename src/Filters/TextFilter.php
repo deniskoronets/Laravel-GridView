@@ -12,6 +12,7 @@ class TextFilter extends BaseFilter
             'name' => $this->name,
             'value' => $grid->getRequest()->filters[$this->name] ?? '',
             'cssClass' => $this->cssClass,
-        ]);
+            'grid' => $grid,
+        ])->render();
     }
 }

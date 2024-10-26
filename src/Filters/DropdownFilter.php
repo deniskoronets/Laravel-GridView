@@ -25,6 +25,7 @@ class DropdownFilter extends BaseFilter
             'value' => $grid->getRequest()->filters[$this->name] ?? '',
             'items' => $this->items,
             'cssClass' => $this->cssClass,
-        ]);
+            'grid' => $grid,
+        ])->render();
     }
 }

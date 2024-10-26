@@ -12,9 +12,8 @@ $thisEnd = $paginator->currentPage() * $paginator->perPage()
 <div class="grid-view-container">
     <div class="woo-grid-view"
          data-id="{{ $grid->getId() }}"
-         data-origin-filters='{{ json_encode($filters) }}'
-         data-sort-column="{{ $grid->getRequest()->sortColumn }}"
-         data-sort-order="{{ $grid->getRequest()->sortOrder }}"
+         data-sort="{{ $grid->getRequest()->sortColumn }}"
+         data-order="{{ $grid->getRequest()->sortOrder }}"
     >
         @include('woo_gridview::grid-form')
         @if ($paginator->hasPages())
@@ -26,7 +25,7 @@ $thisEnd = $paginator->currentPage() * $paginator->perPage()
                     @foreach ($grid->columns as $column)
                         <th {!! $column->compileHeaderHtmlOptions() !!}>
                             @if ($column->getSortableName() !== false)
-                                <a href="#" onclick="window.gridViewSort{{ $grid->getId() }}('{{ $column->getSortableName() }}')">
+                                <a href="#" onclick="window.gridViewSort{{ $grid->getId() }}(event, '{{ $column->getSortableName() }}')">
                                     {{ $column->title }}
                                 </a>
                             @else
