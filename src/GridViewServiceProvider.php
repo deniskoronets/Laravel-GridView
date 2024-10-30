@@ -25,14 +25,6 @@ class GridViewServiceProvider extends ServiceProvider
         \Blade::directive('grid', function ($expression) {
             return "<?php echo grid($expression) ?>";
         });
-
-        $this->publishes([
-            __DIR__ . '/../public' => 'public/vendor/grid-view',
-        ], 'public');
-
-        if (!File::isDirectory(public_path('vendor/grid-view'))) {
-            Artisan::call('vendor:publish', ['--tag' => 'public', '--force' => '']);
-        }
 	}
 
 	public function register()

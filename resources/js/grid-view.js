@@ -20,6 +20,10 @@ grids.map(_grid => {
         );
 
         grid().querySelectorAll('.filter-input').forEach((input) => {
+            if (input.value == '') {
+                return;
+            }
+
             gridForm().insertAdjacentHTML(
                 'beforeend',
                 `<input type="hidden" name="grid[${gridId}][filters][${input.getAttribute('name')}]" value="${input.value}">`
