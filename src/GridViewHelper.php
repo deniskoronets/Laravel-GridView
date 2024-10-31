@@ -151,10 +151,6 @@ class GridViewHelper
      */
     public static function gridIdFormatter($id, $component)
     {
-        if ($id == 0) {
-            return $component;
-        }
-
         return 'grid[' . $id . '][' . $component . ']';
     }
 
