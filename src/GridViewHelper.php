@@ -161,6 +161,9 @@ class GridViewHelper
      */
     public static function pageUrl($gridId, $page)
     {
-        return url()->current() . '?' . Arr::query([\Woo\GridView\GridViewHelper::gridIdFormatter($gridId, 'page') => $page] + request()->query());
+        $query = request()->query();
+        $query['grid'][$gridId]['page'] = $page;
+
+        return url()->current() . '?' . Arr::query($query);
     }
 }
