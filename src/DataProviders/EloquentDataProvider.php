@@ -2,7 +2,7 @@
 
 namespace Woo\GridView\DataProviders;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Woo\GridView\Exceptions\GridViewConfigException;
 use Woo\GridView\GridViewRequest;
 
@@ -17,7 +17,7 @@ class EloquentDataProvider extends BaseDataProvider
      * EloquentDataProvider constructor.
      * @param Builder $query
      */
-    public function __construct(Builder $query)
+    public function __construct(BuilderContract $query)
     {
         $this->query = clone $query;
     }
@@ -30,7 +30,7 @@ class EloquentDataProvider extends BaseDataProvider
      * @param mixed $value
      * @return void
      */
-    private function applyFilter($filter, string $fieldName, Builder $query, $value)
+    private function applyFilter($filter, string $fieldName, BuilderContract $query, $value)
     {
         if (is_callable($filter)) {
            $filter($query, $value);
