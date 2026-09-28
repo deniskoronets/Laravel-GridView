@@ -1,7 +1,5 @@
 # Laravel-GridView v2
 
-[![Code Climate](https://codeclimate.com/github/deniskoronets/Laravel-GridView/badges/gpa.svg)](https://codeclimate.com/github/deniskoronets/Laravel-GridView) 
-
 ## Documentation v.2.x
 <a href='https://deniskoronets.github.io/Laravel-GridView/'>https://deniskoronets.github.io/Laravel-GridView/</a>
 
